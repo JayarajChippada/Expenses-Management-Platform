@@ -1,17 +1,8 @@
-import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  MenuItem,
-  Switch,
-  FormControlLabel,
-  Button,
-  Alert,
-  Divider,
-} from "@mui/material";
+import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { authStart, authFailure, updateUserSuccess } from "../../../features/auth/authSlice";
+import api from "../../../services/axios";
+import { API_ENDPOINTS } from "../../../services/endpoints";
 
 const currencies = [
   { code: "INR", name: "Indian Rupee (₹)" },
@@ -30,9 +21,12 @@ const timezones = [
 ];
 
 const PreferencesSettings = () => {
+  const dispatch = useAppDispatch();
+  const { user, loading } = useAppSelector((state) => state.auth);
+
   const [preferences, setPreferences] = useState({
-    currency: "INR",
-    timezone: "Asia/Kolkata",
+    currency: user?.currency || "INR",
+    timeZone: user?.timeZone || "Asia/Kolkata",
     dateFormat: "DD/MM/YYYY",
     emailNotifications: true,
     pushNotifications: true,
@@ -42,209 +36,185 @@ const PreferencesSettings = () => {
     goalReminders: true,
   });
 
-  const [saved, setSaved] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  // Update preferences if user data changes (e.g. after profile update or sync)
+  useEffect(() => {
+    if (user) {
+      setPreferences(prev => ({
+        ...prev,
+        currency: user.currency || prev.currency,
+        timeZone: user.timeZone || prev.timeZone,
+      }));
+    }
+  }, [user]);
 
   const handleChange = (name: string, value: any) => {
     setPreferences({ ...preferences, [name]: value });
+    setFeedback(null);
   };
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    dispatch(authStart());
+    setFeedback(null);
+
+    try {
+      const response = await api.patch(API_ENDPOINTS.USERS.UPDATE(user!._id), preferences);
+      dispatch(updateUserSuccess(response.data.data));
+      setFeedback({ type: 'success', message: 'Preferences saved successfully!' });
+      setTimeout(() => setFeedback(null), 3000);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Failed to save preferences";
+      dispatch(authFailure(errorMessage));
+      setFeedback({ type: 'error', message: errorMessage });
+    }
   };
 
   return (
-    <Box>
-      {saved && (
-        <Alert severity="success" sx={{ mb: 3 }}>
-          Preferences saved successfully!
-        </Alert>
+    <div>
+      {feedback && (
+        <div className={`alert alert-${feedback.type === 'success' ? 'success' : 'danger'} border-0 rounded-3 d-flex align-items-center mb-4 shadow-sm`} role="alert">
+          <i className={`bi bi-${feedback.type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2 fs-5`}></i>
+          <div>{feedback.message}</div>
+        </div>
       )}
 
       {/* Regional Settings */}
-      <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", mb: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-            Regional Settings
-          </Typography>
+      <div className="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
+        <div className="card-body p-4">
+          <h6 className="fw-bold mb-4 text-dark">Regional & Localization</h6>
 
-          <Box className="row g-3" sx={{ maxWidth: 600 }}>
-            <Box className="col-md-6">
-              <TextField
-                fullWidth
-                select
-                label="Currency"
+          <div className="row g-3" style={{ maxWidth: '800px' }}>
+            <div className="col-md-4">
+              <label className="form-label small fw-bold text-muted mb-1">Currency</label>
+              <select
+                className="form-select rounded-3 py-2"
                 value={preferences.currency}
                 onChange={(e) => handleChange("currency", e.target.value)}
               >
                 {currencies.map((c) => (
-                  <MenuItem key={c.code} value={c.code}>
+                  <option key={c.code} value={c.code}>
                     {c.name}
-                  </MenuItem>
+                  </option>
                 ))}
-              </TextField>
-            </Box>
-            <Box className="col-md-6">
-              <TextField
-                fullWidth
-                select
-                label="Timezone"
-                value={preferences.timezone}
-                onChange={(e) => handleChange("timezone", e.target.value)}
+              </select>
+            </div>
+            <div className="col-md-4">
+              <label className="form-label small fw-bold text-muted mb-1">Timezone</label>
+              <select
+                className="form-select rounded-3 py-2"
+                value={preferences.timeZone}
+                onChange={(e) => handleChange("timeZone", e.target.value)}
               >
                 {timezones.map((tz) => (
-                  <MenuItem key={tz.value} value={tz.value}>
+                  <option key={tz.value} value={tz.value}>
                     {tz.label}
-                  </MenuItem>
+                  </option>
                 ))}
-              </TextField>
-            </Box>
-            <Box className="col-md-6">
-              <TextField
-                fullWidth
-                select
-                label="Date Format"
+              </select>
+            </div>
+            <div className="col-md-4">
+              <label className="form-label small fw-bold text-muted mb-1">Preferred Date Format</label>
+              <select
+                className="form-select rounded-3 py-2"
                 value={preferences.dateFormat}
                 onChange={(e) => handleChange("dateFormat", e.target.value)}
               >
-                <MenuItem value="DD/MM/YYYY">DD/MM/YYYY</MenuItem>
-                <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>
-                <MenuItem value="YYYY-MM-DD">YYYY-MM-DD</MenuItem>
-              </TextField>
-            </Box>
-          </Box>
-        </CardContent>
-      </Card>
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Notification Settings */}
-      <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", mb: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-            Notification Preferences
-          </Typography>
+      <div className="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
+        <div className="card-body p-4">
+          <h6 className="fw-bold mb-4 text-dark">Messaging & Notifications</h6>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.emailNotifications}
-                  onChange={(e) => handleChange("emailNotifications", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Email Notifications</Typography>
-                  <Typography variant="caption" color="text.secondary">Receive updates via email</Typography>
-                </Box>
-              }
-            />
-            <Divider />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.pushNotifications}
-                  onChange={(e) => handleChange("pushNotifications", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Push Notifications</Typography>
-                  <Typography variant="caption" color="text.secondary">Receive browser push notifications</Typography>
-                </Box>
-              }
-            />
-            <Divider />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.budgetAlerts}
-                  onChange={(e) => handleChange("budgetAlerts", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Budget Alerts</Typography>
-                  <Typography variant="caption" color="text.secondary">Get notified when approaching budget limits</Typography>
-                </Box>
-              }
-            />
-            <Divider />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.goalReminders}
-                  onChange={(e) => handleChange("goalReminders", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Goal Reminders</Typography>
-                  <Typography variant="caption" color="text.secondary">Remind me about my financial goals</Typography>
-                </Box>
-              }
-            />
-          </Box>
-        </CardContent>
-      </Card>
+          <div className="row g-4">
+            <div className="col-md-6 border-end border-light">
+              <div className="d-flex flex-column gap-3">
+                <div className="form-check form-switch d-flex justify-content-between align-items-center ps-0 mb-2">
+                  <div>
+                    <label className="form-check-label fw-bold small d-block text-dark" htmlFor="emailNotifications">Email Communication</label>
+                    <span className="text-muted extra-small fw-medium">Weekly digests and critical alerts</span>
+                  </div>
+                  <input
+                    className="form-check-input ms-0 mt-0"
+                    type="checkbox"
+                    role="switch"
+                    id="emailNotifications"
+                    checked={preferences.emailNotifications}
+                    onChange={(e) => handleChange("emailNotifications", e.target.checked)}
+                  />
+                </div>
+                
+                <div className="form-check form-switch d-flex justify-content-between align-items-center ps-0 mb-2">
+                  <div>
+                    <label className="form-check-label fw-bold small d-block text-dark" htmlFor="pushNotifications">App Notifications</label>
+                    <span className="text-muted extra-small fw-medium">Real-time web notifications</span>
+                  </div>
+                  <input
+                    className="form-check-input ms-0 mt-0"
+                    type="checkbox"
+                    role="switch"
+                    id="pushNotifications"
+                    checked={preferences.pushNotifications}
+                    onChange={(e) => handleChange("pushNotifications", e.target.checked)}
+                  />
+                </div>
+              </div>
+            </div>
 
-      {/* Report Settings */}
-      <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", mb: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-            Report Settings
-          </Typography>
+            <div className="col-md-6">
+              <div className="d-flex flex-column gap-3">
+                <div className="form-check form-switch d-flex justify-content-between align-items-center ps-0 mb-2">
+                  <div>
+                    <label className="form-check-label fw-bold small d-block text-dark" htmlFor="budgetAlerts">Smart Budget Alerts</label>
+                    <span className="text-muted extra-small fw-medium">Notify when near or over budget</span>
+                  </div>
+                  <input
+                    className="form-check-input ms-0 mt-0"
+                    type="checkbox"
+                    role="switch"
+                    id="budgetAlerts"
+                    checked={preferences.budgetAlerts}
+                    onChange={(e) => handleChange("budgetAlerts", e.target.checked)}
+                  />
+                </div>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.weeklyReports}
-                  onChange={(e) => handleChange("weeklyReports", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Weekly Summary</Typography>
-                  <Typography variant="caption" color="text.secondary">Receive weekly expense summary every Sunday</Typography>
-                </Box>
-              }
-            />
-            <Divider />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={preferences.monthlyReports}
-                  onChange={(e) => handleChange("monthlyReports", e.target.checked)}
-                  color="primary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Monthly Reports</Typography>
-                  <Typography variant="caption" color="text.secondary">Receive detailed monthly reports on the 1st</Typography>
-                </Box>
-              }
-            />
-          </Box>
-        </CardContent>
-      </Card>
+                <div className="form-check form-switch d-flex justify-content-between align-items-center ps-0 mb-2">
+                  <div>
+                    <label className="form-check-label fw-bold small d-block text-dark" htmlFor="goalReminders">Goal Progress Reminders</label>
+                    <span className="text-muted extra-small fw-medium">Periodic nudges about your goals</span>
+                  </div>
+                  <input
+                    className="form-check-input ms-0 mt-0"
+                    type="checkbox"
+                    role="switch"
+                    id="goalReminders"
+                    checked={preferences.goalReminders}
+                    onChange={(e) => handleChange("goalReminders", e.target.checked)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <Button
-        variant="contained"
+      <button
+        className="btn btn-primary-gradient px-5 py-2 rounded-3 fw-bold shadow-sm mb-4 d-flex align-items-center gap-2"
         onClick={handleSave}
-        sx={{
-          textTransform: "none",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        }}
+        disabled={loading}
       >
-        Save Preferences
-      </Button>
-    </Box>
+        {loading && <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+        Apply All Preferences
+      </button>
+    </div>
   );
 };
 

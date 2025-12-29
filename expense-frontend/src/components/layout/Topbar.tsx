@@ -1,172 +1,148 @@
 import { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Box,
-  Avatar,
-  Menu,
-  MenuItem,
-  Badge,
-  Divider,
-  ListItemIcon,
-} from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Notifications,
-  Person,
-  Settings,
-  Logout,
-} from "@mui/icons-material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { toggleSidebar } from "../../features/ui/uiSlice";
+import { toggleSidebar, setTheme } from "../../features/ui/uiSlice";
 import { logOut } from "../../features/auth/authSlice";
+
+import NotificationDropdown from "../common/NotificationDropdown";
 
 interface TopbarProps {
   isMobile: boolean;
 }
 
-const getPageTitle = (pathname: string): string => {
-  const routes: Record<string, string> = {
-    "/dashboard": "Dashboard",
-    "/expenses": "Expenses",
-    "/income": "Income",
-    "/budgets": "Budgets",
-    "/goals": "Goals",
-    "/reports": "Reports",
-    "/settings": "Settings",
-  };
-  return routes[pathname] || "Dashboard";
-};
-
 const Topbar = ({ isMobile }: TopbarProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+  
   const { user } = useAppSelector((state) => state.auth);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { theme } = useAppSelector((state) => state.ui);
+  
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleLogout = () => {
-    handleMenuClose();
+    setShowDropdown(false);
     dispatch(logOut());
     navigate("/login");
   };
 
   const handleSettings = () => {
-    handleMenuClose();
+    setShowDropdown(false);
     navigate("/settings");
+  };
+
+  const toggleTheme = () => {
+    dispatch(setTheme(theme === "light" ? "dark" : "light"));
   };
 
   const getInitials = (name: string | undefined) => {
     if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   };
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        bgcolor: "white",
-        borderBottom: "1px solid rgba(0,0,0,0.08)",
+    <nav
+      className="topbar navbar navbar-light fixed-top px-4"
+      style={{ 
+        marginLeft: isMobile ? 0 : '260px',
+        transition: 'margin-left 0.3s ease-in-out'
       }}
     >
-      <Toolbar className="d-flex justify-content-between">
-        <Box className="d-flex align-items-center">
+      <div className="container-fluid p-0 d-flex justify-content-between">
+        <div className="d-flex align-items-center flex-grow-1">
           {isMobile && (
-            <IconButton
-              edge="start"
+            <button
+              className="btn btn-link text-dark p-0 me-3 shadow-none border-0"
               onClick={() => dispatch(toggleSidebar())}
-              sx={{ mr: 1, color: "text.primary" }}
             >
-              <MenuIcon />
-            </IconButton>
+              <i className="bi bi-list fs-3"></i>
+            </button>
           )}
-          <Typography
-            variant="h6"
-            sx={{ color: "text.primary", fontWeight: 600 }}
+          
+
+          {/* Search Bar */}
+          {!isMobile && (
+            <div className="search-input-group d-flex align-items-center">
+              <i className="bi bi-search text-muted small me-2"></i>
+              <input type="text" placeholder="Search transactions..." />
+            </div>
+          )}
+        </div>
+
+        <div className="d-flex align-items-center gap-2 gap-md-3">
+          {/* Theme Toggle */}
+          <button 
+            className="btn btn-link text-secondary p-1 d-flex align-items-center border-0 text-decoration-none shadow-none"
+            onClick={toggleTheme}
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
           >
-            {getPageTitle(location.pathname)}
-          </Typography>
-        </Box>
+            <i className={`bi ${theme === "light" ? "bi-moon-stars" : "bi-sun"} fs-5`}></i>
+          </button>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <IconButton sx={{ color: "text.secondary" }}>
-            <Badge badgeContent={3} color="error">
-              <Notifications />
-            </Badge>
-          </IconButton>
+          {/* Notifications */}
+          <NotificationDropdown />
 
-          <IconButton onClick={handleMenuOpen} sx={{ p: 0.5 }}>
-            <Avatar
-              sx={{
-                width: 36,
-                height: 36,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                fontSize: 14,
-                fontWeight: 600,
-              }}
+          {/* User Info & Dropdown */}
+          <div className="dropdown position-relative">
+            <button
+              className="btn p-1 d-flex align-items-center gap-2 border-0 shadow-none"
+              onClick={() => setShowDropdown(!showDropdown)}
             >
-              {getInitials(user?.fullName)}
-            </Avatar>
-          </IconButton>
+              <div
+                className="rounded-circle avatar-gradient d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+                style={{ width: '38px', height: '38px', fontSize: '13px' }}
+              >
+                {getInitials(user?.fullName)}
+              </div>
+              {!isMobile && (
+                <div className="text-start me-1">
+                  <div className="fw-bold text-dark small leading-1">{user?.fullName || "User"}</div>
+                  <div className="d-flex justify-content-end"><i className="bi bi-chevron-down extra-small text-muted"></i></div>
+                </div>
+              )}
+            </button>
 
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            PaperProps={{
-              sx: {
-                mt: 1,
-                minWidth: 200,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                borderRadius: 2,
-              },
-            }}
-          >
-            <Box sx={{ px: 2, py: 1.5 }}>
-              <Typography variant="subtitle2" fontWeight={600}>
-                {user?.fullName || "User"}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {user?.email || "user@example.com"}
-              </Typography>
-            </Box>
-            <Divider />
-            <MenuItem onClick={handleSettings} sx={{ py: 1.5 }}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem onClick={handleLogout} sx={{ py: 1.5, color: "#ef4444" }}>
-              <ListItemIcon>
-                <Logout fontSize="small" sx={{ color: "#ef4444" }} />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Box>
-      </Toolbar>
-    </AppBar>
+            {showDropdown && (
+              <>
+                <div
+                  className="position-fixed top-0 start-0 w-100 h-100"
+                  style={{ zIndex: 1050}}
+                  onClick={() => setShowDropdown(false)}
+                ></div>
+                <div
+                  className="dropdown-menu show border-0 shadow-lg p-2 mt-2"
+                  style={{ position: "absolute",
+                          top: "100%",
+                          right: 0,
+                          minWidth: "220px",
+                          marginTop: "10px",
+                          borderRadius: "12px",
+                          zIndex: 1051 }}>
+                  <div className="px-3 py-2 border-bottom mb-2">
+                    <div className="fw-bold text-dark">{user?.fullName || "User"}</div>
+                    <div className="text-muted extra-small">{user?.email}</div>
+                  </div>
+                  <button className="dropdown-item py-2 rounded-2 d-flex align-items-center gap-2" onClick={handleSettings}>
+                    <i className="bi bi-person me-2"></i>
+                    My Profile
+                  </button>
+                  <button className="dropdown-item py-2 rounded-2 d-flex align-items-center gap-2" onClick={handleSettings}>
+                    <i className="bi bi-gear me-2"></i>
+                    Settings
+                  </button>
+                  <hr className="dropdown-divider opacity-50" />
+                  <button className="dropdown-item py-2 rounded-2 text-danger d-flex align-items-center gap-2" onClick={handleLogout}>
+                    <i className="bi bi-box-arrow-right me-2"></i>
+                    Logout
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 };
 

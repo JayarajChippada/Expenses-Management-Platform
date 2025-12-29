@@ -1,7 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface ReportsState {
-  data: any;
+  overview: any;
+  trends: {
+    expenses: any[];
+    incomes: any[];
+  };
+  categories: any[];
+  merchants: any[];
   filters: {
     dateRange: string;
     category?: string;
@@ -11,9 +17,12 @@ interface ReportsState {
 }
 
 const initialState: ReportsState = {
-  data: null,
+  overview: null,
+  trends: { expenses: [], incomes: [] },
+  categories: [],
+  merchants: [],
   filters: {
-    dateRange: "month",
+    dateRange: "1M",
   },
   loading: false,
   error: null,
@@ -25,21 +34,42 @@ const reportsSlice = createSlice({
   reducers: {
     reportsStart(state) {
       state.loading = true;
-    },
-    setReportsData(state, action: PayloadAction<any>) {
-      state.data = action.payload;
-      state.loading = false;
       state.error = null;
+    },
+    reportsOverviewSuccess(state, action: PayloadAction<any>) {
+      state.overview = action.payload;
+      state.loading = false;
+    },
+    reportsTrendsSuccess(state, action: PayloadAction<{ expenses: any[]; incomes: any[] }>) {
+      state.trends = action.payload;
+      state.loading = false;
+    },
+    reportsCategoriesSuccess(state, action: PayloadAction<any[]>) {
+      state.categories = action.payload;
+      state.loading = false;
+    },
+    reportsMerchantsSuccess(state, action: PayloadAction<any[]>) {
+      state.merchants = action.payload;
+      state.loading = false;
     },
     setReportsFilters(state, action: PayloadAction<any>) {
       state.filters = { ...state.filters, ...action.payload };
     },
-    reportsFailure(state, action: PayloadAction<string>) {
+    reportsFailure(state, action: PayloadAction<string | null>) {
       state.loading = false;
       state.error = action.payload;
     },
   },
 });
 
-export const { reportsStart, setReportsData, setReportsFilters, reportsFailure } = reportsSlice.actions;
+export const { 
+  reportsStart, 
+  reportsOverviewSuccess, 
+  reportsTrendsSuccess, 
+  reportsCategoriesSuccess, 
+  reportsMerchantsSuccess, 
+  setReportsFilters, 
+  reportsFailure 
+} = reportsSlice.actions;
+
 export default reportsSlice.reducer;

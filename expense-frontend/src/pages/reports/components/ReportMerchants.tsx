@@ -1,4 +1,3 @@
-import { Box, Card, CardContent, Typography, Chip } from "@mui/material";
 import {
   BarChart,
   Bar,
@@ -7,129 +6,231 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
-
-const merchantData = [
-  { name: "Amazon", amount: 25000, transactions: 12, category: "Shopping" },
-  { name: "Swiggy", amount: 18000, transactions: 45, category: "Food & Dining" },
-  { name: "Uber", amount: 12000, transactions: 28, category: "Transportation" },
-  { name: "Netflix", amount: 7800, transactions: 12, category: "Entertainment" },
-  { name: "Flipkart", amount: 15000, transactions: 8, category: "Shopping" },
-  { name: "Zomato", amount: 14000, transactions: 38, category: "Food & Dining" },
-  { name: "Electricity", amount: 8500, transactions: 4, category: "Bills" },
-  { name: "Petrol Pump", amount: 16000, transactions: 15, category: "Transportation" },
-  { name: "Apollo Pharmacy", amount: 5500, transactions: 6, category: "Healthcare" },
-  { name: "BookMyShow", amount: 4500, transactions: 5, category: "Entertainment" },
-];
+import { useAppSelector } from "../../../app/hooks";
+import { useMemo } from "react";
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
     Shopping: "#22c55e",
-    "Food & Dining": "#667eea",
+    Food: "#6366f1",
     Transportation: "#f59e0b",
-    Entertainment: "#8b5cf6",
+    Entertainment: "#a855f7",
     Bills: "#ef4444",
     Healthcare: "#ec4899",
   };
   return colors[category] || "#64748b";
 };
 
+const formatCurrency = (value: number) =>
+  value >= 1000 ? `₹${(value / 1000).toFixed(1)}k` : `₹${value}`;
+
 const ReportMerchants = () => {
-  const topMerchants = [...merchantData].sort((a, b) => b.amount - a.amount).slice(0, 5);
-  const totalSpent = merchantData.reduce((sum, m) => sum + m.amount, 0);
+  const { merchants: merchantData } = useAppSelector(
+    (state) => state.reports
+  );
+
+  if (!merchantData || merchantData.length === 0) {
+    return (
+      <div className="p-5 text-center text-muted">
+        <i className="bi bi-shop-window fs-1 d-block mb-3 opacity-25"></i>
+        No merchant data available for this period
+      </div>
+    );
+  }
+
+  // Top 5 merchants by spending
+  const topMerchants = useMemo(
+    () =>
+      [...merchantData]
+        .sort((a, b) => b.amount - a.amount)
+        .slice(0, 5),
+    [merchantData]
+  );
+
+  const totalSpent = merchantData.reduce(
+    (sum, m) => sum + (m.amount || 0),
+    0
+  );
+
+  const totalTransactions = merchantData.reduce(
+    (sum, m) => sum + (m.count || 0),
+    0
+  );
 
   return (
-    <Box>
-      <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-        Top Merchants / Vendors
-      </Typography>
+    <div>
+      <div className="row g-4 mb-4">
+        {/* BAR CHART */}
+        <div className="col-lg-8">
+          <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+            <div className="card-header bg-white border-bottom-0 p-4">
+              <h6 className="fw-bold mb-0">Top 5 Merchants by Spending</h6>
+            </div>
+            <div className="card-body p-4 pt-0">
+              <div style={{ height: "280px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topMerchants}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="_id"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 13, fontWeight: "bold" }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={formatCurrency}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <Tooltip
+                      formatter={(v: any) => [
+                        `₹${Number(v).toLocaleString()}`,
+                        "Amount",
+                      ]}
+                    />
+                    <Bar
+                      dataKey="amount"
+                      radius={[8, 8, 0, 0]}
+                      barSize={40}
+                    >
+                      {topMerchants.map((m, index) => (
+                        <Cell
+                          key={m._id}
+                          fill={
+                            index === 0
+                              ? "var(--primary-color)"
+                              : getCategoryColor(m.categoryName)
+                          }
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <Box className="row g-3">
-        <Box className="col-lg-8">
-          <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Top 5 Merchants by Spending</Typography>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={topMerchants}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} tickFormatter={(v) => `₹${v/1000}k`} />
-                  <Tooltip formatter={(v: number) => [`₹${v.toLocaleString()}`, 'Amount']} />
-                  <Bar dataKey="amount" fill="#667eea" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Box>
+        {/* SUMMARY CARDS */}
+        <div className="col-lg-4">
+          <div className="card h-100 shadow-sm border-0 rounded-4">
+            <div className="card-body p-4">
+              <h6 className="fw-bold mb-4 small text-uppercase opacity-75">
+                Activity Highlights
+              </h6>
 
-        <Box className="col-lg-4">
-          <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Summary</Typography>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">Total Merchants</Typography>
-                  <Typography variant="h5" fontWeight={700}>{merchantData.length}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">Total Spent</Typography>
-                  <Typography variant="h5" fontWeight={700} color="#ef4444">₹{totalSpent.toLocaleString()}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">Total Transactions</Typography>
-                  <Typography variant="h5" fontWeight={700} color="#667eea">
-                    {merchantData.reduce((sum, m) => sum + m.transactions, 0)}
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-      </Box>
+              <div className="d-flex flex-column gap-4">
+                <div className="d-flex align-items-center gap-3">
+                  <div className="rounded-4 bg-primary-subtle p-3">
+                    <i className="bi bi-shop-window fs-4"></i>
+                  </div>
+                  <div>
+                    <div className="text-muted small fw-bold">
+                      Merchants Transacted
+                    </div>
+                    <div className="h4 fw-bold mb-0">
+                      {merchantData.length}
+                    </div>
+                  </div>
+                </div>
 
-      {/* Merchant Details Table */}
-      <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", mt: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2 }}>All Merchants</Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {merchantData.map((merchant, index) => (
-              <Box
-                key={merchant.name}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  py: 1.5,
-                  borderBottom: index < merchantData.length - 1 ? "1px solid #f0f0f0" : "none",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Typography variant="body2" fontWeight={500}>{merchant.name}</Typography>
-                  <Chip
-                    label={merchant.category}
-                    size="small"
-                    sx={{
-                      height: 20,
-                      fontSize: 10,
-                      bgcolor: `${getCategoryColor(merchant.category)}15`,
-                      color: getCategoryColor(merchant.category),
-                    }}
-                  />
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {merchant.transactions} txns
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
+                <div className="d-flex align-items-center gap-3">
+                  <div className="rounded-4 bg-danger-subtle p-3">
+                    <i className="bi bi-cart-x fs-4 text-danger"></i>
+                  </div>
+                  <div>
+                    <div className="text-muted small fw-bold">
+                      Total Net Spent
+                    </div>
+                    <div className="h4 fw-bold mb-0 text-danger">
+                      ₹{totalSpent.toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="d-flex align-items-center gap-3">
+                  <div className="rounded-4 bg-success-subtle p-3">
+                    <i className="bi bi-arrow-repeat fs-4 text-success"></i>
+                  </div>
+                  <div>
+                    <div className="text-muted small fw-bold">
+                      Total Frequency
+                    </div>
+                    <div className="h4 fw-bold mb-0 text-success">
+                      {totalTransactions}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MERCHANT TABLE */}
+      <div className="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+        <div className="card-header bg-white border-bottom-0 p-4">
+          <h6 className="fw-bold mb-0">Full Merchant Tracking List</h6>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
+            <thead className="bg-light">
+              <tr>
+                <th className="px-4 py-3 text-uppercase small">
+                  Merchant Name
+                </th>
+                <th className="py-3 text-uppercase small">
+                  Primary Category
+                </th>
+                <th className="py-3 text-uppercase small text-center">
+                  Frequency
+                </th>
+                <th className="px-4 py-3 text-uppercase small text-end">
+                  Net Spend
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {merchantData.map((merchant: any) => (
+                <tr key={merchant._id}>
+                  <td className="px-4 fw-bold">
+                    {merchant._id}
+                  </td>
+                  <td>
+                    <span
+                      className="badge rounded-pill"
+                      style={{
+                        backgroundColor: `${getCategoryColor(
+                          merchant.categoryName
+                        )}20`,
+                        color: getCategoryColor(
+                          merchant.categoryName
+                        ),
+                      }}
+                    >
+                      {merchant.categoryName}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    {merchant.count} txns
+                  </td>
+                  <td className="px-4 text-end fw-bold">
                     ₹{merchant.amount.toLocaleString()}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

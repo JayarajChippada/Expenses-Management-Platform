@@ -1,16 +1,13 @@
-import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  MenuItem,
-  Box,
-  IconButton,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { useState, useEffect, useCallback } from "react";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { 
+  categoryStart, 
+  categoryFailure, 
+  categoryNamesSuccess 
+} from "../../../features/categories/categorySlice";
+import AddCategoryModal from "../../expenses/components/AddCategoryModal";
+import api from "../../../services/axios";
+import { API_ENDPOINTS } from "../../../services/endpoints";
 
 interface BudgetModalProps {
   open: boolean;
@@ -19,20 +16,13 @@ interface BudgetModalProps {
   budget?: any;
 }
 
-const categories = [
-  "Food & Dining",
-  "Transportation",
-  "Shopping",
-  "Entertainment",
-  "Bills & Utilities",
-  "Healthcare",
-  "Travel",
-  "Others",
-];
-
 const frequencies = ["Monthly", "Weekly", "Yearly"];
 
 const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
+  const dispatch = useAppDispatch();
+  const { names: categories } = useAppSelector((state) => state.categories);
+  const [showAddCategory, setShowAddCategory] = useState(false);
+
   const [formData, setFormData] = useState({
     categoryName: "",
     budgetAmount: "",
@@ -40,6 +30,22 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
     startDate: new Date().toISOString().split("T")[0],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const fetchCategoryNames = useCallback(async () => {
+    dispatch(categoryStart());
+    try {
+      const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("expense"));
+      dispatch(categoryNamesSuccess(response.data.data));
+    } catch (error: any) {
+      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (open) {
+      fetchCategoryNames();
+    }
+  }, [open, fetchCategoryNames]);
 
   useEffect(() => {
     if (budget) {
@@ -70,15 +76,29 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    if (name === "categoryName" && value === "Others") {
+      setShowAddCategory(true);
+      return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  const handleSubmit = () => {
+  const handleCategoryAdded = (newCategoryName?: string) => {
+    setShowAddCategory(false);
+    if (newCategoryName) {
+      setFormData(prev => ({ ...prev, categoryName: newCategoryName }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!validateForm()) return;
     onSubmit({
       categoryName: formData.categoryName,
@@ -92,84 +112,112 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
     onClose();
   };
 
+  if (!open) return null;
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {budget ? "Edit Budget" : "Create New Budget"}
-        <IconButton size="small" onClick={onClose}>
-          <Close />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5, pt: 1 }}>
-          <TextField
-            select
-            label="Category"
-            name="categoryName"
-            value={formData.categoryName}
-            onChange={handleChange}
-            error={!!errors.categoryName}
-            helperText={errors.categoryName}
-            fullWidth
-          >
-            {categories.map((cat) => (
-              <MenuItem key={cat} value={cat}>
-                {cat}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Budget Amount (₹)"
-            name="budgetAmount"
-            type="number"
-            value={formData.budgetAmount}
-            onChange={handleChange}
-            error={!!errors.budgetAmount}
-            helperText={errors.budgetAmount}
-            fullWidth
-            placeholder="Enter budget amount"
-          />
-          <TextField
-            select
-            label="Frequency"
-            name="frequency"
-            value={formData.frequency}
-            onChange={handleChange}
-            fullWidth
-          >
-            {frequencies.map((freq) => (
-              <MenuItem key={freq} value={freq}>
-                {freq}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Start Date"
-            name="startDate"
-            type="date"
-            value={formData.startDate}
-            onChange={handleChange}
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-          />
-        </Box>
-      </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose} sx={{ textTransform: "none" }}>
-          Cancel
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          sx={{
-            textTransform: "none",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          }}
-        >
-          {budget ? "Update Budget" : "Create Budget"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <>
+      <div className="modal fade show d-block shadow-sm" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content border-0 shadow-lg rounded-4">
+            <div className="modal-header border-bottom-0 px-4 pt-4">
+              <h5 className="modal-title fw-bold">
+                {budget ? "Edit Budget Settings" : "Create New Budget"}
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={onClose}
+                aria-label="Close"
+              ></button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="modal-body px-4 py-3">
+                <div className="row g-3">
+                  <div className="col-12">
+                    <label className="form-label small fw-bold text-muted mb-1">Select Category</label>
+                    <select
+                      className={`form-select rounded-3 ${errors.categoryName ? 'is-invalid' : ''}`}
+                      name="categoryName"
+                      value={formData.categoryName}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                      <option value="Others" className="fw-bold text-primary">+ Add New Category</option>
+                    </select>
+                    {errors.categoryName && <div className="invalid-feedback">{errors.categoryName}</div>}
+                  </div>
+
+                  <div className="col-12">
+                    <label className="form-label small fw-bold text-muted mb-1">Budget Amount (₹)</label>
+                    <input
+                      type="number"
+                      className={`form-control rounded-3 ${errors.budgetAmount ? 'is-invalid' : ''}`}
+                      name="budgetAmount"
+                      value={formData.budgetAmount}
+                      onChange={handleChange}
+                      placeholder="Enter limit amount"
+                    />
+                    {errors.budgetAmount && <div className="invalid-feedback">{errors.budgetAmount}</div>}
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label small fw-bold text-muted mb-1">Frequency</label>
+                    <select
+                      className="form-select rounded-3"
+                      name="frequency"
+                      value={formData.frequency}
+                      onChange={handleChange}
+                    >
+                      {frequencies.map((freq) => (
+                        <option key={freq} value={freq}>
+                          {freq}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label small fw-bold text-muted mb-1">Start Date</label>
+                    <input
+                      type="date"
+                      className="form-control rounded-3"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer border-top-0 px-4 pb-4 pt-3">
+                <button
+                  type="button"
+                  className="btn btn-light px-4 rounded-3 text-muted fw-bold"
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary-gradient px-4 rounded-3 fw-bold shadow-sm"
+                >
+                  {budget ? "Save Changes" : "Create Budget"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <AddCategoryModal 
+        show={showAddCategory} 
+        onClose={handleCategoryAdded} 
+        type="expense"
+      />
+    </>
   );
 };
 

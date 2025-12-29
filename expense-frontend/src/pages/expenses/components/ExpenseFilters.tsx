@@ -1,42 +1,47 @@
-import { useState } from "react";
-import {
-  Box,
-  TextField,
-  MenuItem,
-  InputAdornment,
-  Button,
-} from "@mui/material";
-import { Search, FilterList, Clear } from "@mui/icons-material";
+import { useState, useEffect, useCallback } from "react";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { 
+  categoryStart, 
+  categoryFailure, 
+  categoryNamesSuccess 
+} from "../../../features/categories/categorySlice";
+import api from "../../../services/axios";
+import { API_ENDPOINTS } from "../../../services/endpoints";
 
 interface ExpenseFiltersProps {
   onFilterChange: (filters: any) => void;
 }
 
-const categories = [
-  "All Categories",
-  "Food & Dining",
-  "Transportation",
-  "Shopping",
-  "Entertainment",
-  "Bills & Utilities",
-  "Healthcare",
-  "Travel",
-  "Others",
-];
-
 const dateRanges = [
-  { label: "All Time", value: "all" },
-  { label: "Today", value: "today" },
-  { label: "This Week", value: "week" },
-  { label: "This Month", value: "month" },
-  { label: "Last 3 Months", value: "3months" },
-  { label: "This Year", value: "year" },
+  { label: "All Time", value: "ALL" },
+  { label: "Today", value: "TODAY" },
+  { label: "Yesterday", value: "YESTERDAY" },
+  { label: "Last 1 Month", value: "1M" },
+  { label: "Last 3 Months", value: "3M" },
+  { label: "Last 6 Months", value: "6M" },
+  { label: "Last Year", value: "1Y" },
 ];
 
 const ExpenseFilters = ({ onFilterChange }: ExpenseFiltersProps) => {
+  const dispatch = useAppDispatch();
+  const { names: categories } = useAppSelector((state) => state.categories);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All Categories");
-  const [dateRange, setDateRange] = useState("all");
+  const [category, setCategory] = useState("");
+  const [dateRange, setDateRange] = useState("ALL");
+
+  const fetchNames = useCallback(async () => {
+    dispatch(categoryStart());
+    try {
+      const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("expense"));
+      dispatch(categoryNamesSuccess(response.data.data));
+    } catch (error: any) {
+      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchNames();
+  }, [fetchNames]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -55,80 +60,69 @@ const ExpenseFilters = ({ onFilterChange }: ExpenseFiltersProps) => {
 
   const clearFilters = () => {
     setSearch("");
-    setCategory("All Categories");
-    setDateRange("all");
-    onFilterChange({ search: "", category: "All Categories", dateRange: "all" });
+    setCategory("");
+    setDateRange("ALL");
+    onFilterChange({ search: "", category: "", dateRange: "ALL" });
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 2,
-        mb: 3,
-        alignItems: "center",
-      }}
-    >
-      <TextField
-        size="small"
-        placeholder="Search expenses..."
-        value={search}
-        onChange={(e) => handleSearchChange(e.target.value)}
-        sx={{ minWidth: 250, flexGrow: 1, maxWidth: 350 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Search sx={{ color: "text.secondary" }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+    <div className="row g-3 align-items-center">
+      <div className="col-12 col-md-4">
+        <div className="input-group search-input-group border w-100" style={{ background: '#fff' }}>
+          <span className="input-group-text bg-transparent border-0 ps-3">
+            <i className="bi bi-search text-muted small"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control border-0 bg-transparent"
+            placeholder="Search expenses..."
+            value={search}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+        </div>
+      </div>
 
-      <TextField
-        select
-        size="small"
-        value={category}
-        onChange={(e) => handleCategoryChange(e.target.value)}
-        sx={{ minWidth: 180 }}
-      >
-        {categories.map((cat) => (
-          <MenuItem key={cat} value={cat}>
-            {cat}
-          </MenuItem>
-        ))}
-      </TextField>
+      <div className="col-12 col-sm-6 col-md-3">
+        <select
+          className="form-select border-light-subtle rounded-3"
+          value={category}
+          onChange={(e) => handleCategoryChange(e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <TextField
-        select
-        size="small"
-        value={dateRange}
-        onChange={(e) => handleDateRangeChange(e.target.value)}
-        sx={{ minWidth: 150 }}
-      >
-        {dateRanges.map((range) => (
-          <MenuItem key={range.value} value={range.value}>
-            {range.label}
-          </MenuItem>
-        ))}
-      </TextField>
+      <div className="col-12 col-sm-6 col-md-3">
+        <select
+          className="form-select border-light-subtle rounded-3"
+          value={dateRange}
+          onChange={(e) => handleDateRangeChange(e.target.value)}
+        >
+          {dateRanges.map((range) => (
+            <option key={range.value} value={range.value}>
+              {range.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <Button
-        variant="outlined"
-        size="small"
-        startIcon={<Clear />}
-        onClick={clearFilters}
-        sx={{
-          textTransform: "none",
-          borderColor: "divider",
-          color: "text.secondary",
-          "&:hover": { borderColor: "#667eea", color: "#667eea" },
-        }}
-      >
-        Clear
-      </Button>
-    </Box>
+      <div className="col-12 col-md-2">
+        <button
+          className="btn btn-outline-light text-muted border-light-subtle w-100 d-flex align-items-center justify-content-center gap-2 rounded-3"
+          onClick={clearFilters}
+        >
+          <i className="bi bi-x-circle"></i>
+          Reset
+        </button>
+      </div>
+    </div>
   );
 };
 
 export default ExpenseFilters;
+

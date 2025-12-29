@@ -1,34 +1,48 @@
-import { useState } from "react";
-import { Box, Typography, Button, TextField, MenuItem } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { useState, useEffect, useCallback } from "react";
 import BudgetCard from "./components/BudgetCard";
 import BudgetModal from "./components/BudgetModal";
-
-// Sample data with spent amounts
-const sampleBudgets = [
-  { _id: "1", categoryName: "Food & Dining", budgetAmount: 8000, spent: 6500, period: { frequency: "Monthly", start: "2024-12-01" } },
-  { _id: "2", categoryName: "Transportation", budgetAmount: 3000, spent: 3500, period: { frequency: "Monthly", start: "2024-12-01" } },
-  { _id: "3", categoryName: "Shopping", budgetAmount: 5000, spent: 2800, period: { frequency: "Monthly", start: "2024-12-01" } },
-  { _id: "4", categoryName: "Entertainment", budgetAmount: 2000, spent: 1800, period: { frequency: "Monthly", start: "2024-12-01" } },
-  { _id: "5", categoryName: "Bills & Utilities", budgetAmount: 5000, spent: 4200, period: { frequency: "Monthly", start: "2024-12-01" } },
-  { _id: "6", categoryName: "Healthcare", budgetAmount: 2000, spent: 500, period: { frequency: "Monthly", start: "2024-12-01" } },
-];
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { 
+  budgetStart, 
+  budgetSuccess, 
+  budgetFailure, 
+  createBudgetSuccess, 
+  updateBudgetSuccess, 
+  deleteBudgetSuccess,
+  setBudgetFilters
+} from "../../features/budgets/budgetSlice";
+import api from "../../services/axios";
+import { API_ENDPOINTS } from "../../services/endpoints";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
-const years = [2023, 2024, 2025];
+const currentYear = new Date().getFullYear();
+const years = [currentYear - 1, currentYear, currentYear + 1];
 
 const Budgets = () => {
-  const [budgetList, setBudgetList] = useState(sampleBudgets);
+  const dispatch = useAppDispatch();
+  const { list: budgetList, loading, filters, error } = useAppSelector((state) => state.budgets);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState<any>(null);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  const handleAddBudget = () => {
+  const fetchBudgets = useCallback(async () => {
+    dispatch(budgetStart());
+    try {
+      const response = await api.get(API_ENDPOINTS.BUDGETS.BASE, { params: filters });
+      dispatch(budgetSuccess({ data: response.data.data || response.data }));
+    } catch (err: any) {
+      dispatch(budgetFailure(err.response?.data?.message || "Failed to fetch budgets"));
+    }
+  }, [dispatch, filters]);
+
+  useEffect(() => {
+    fetchBudgets();
+  }, [fetchBudgets]);
+
+  const handleCreateBudget = () => {
     setSelectedBudget(null);
     setModalOpen(true);
   };
@@ -38,103 +52,140 @@ const Budgets = () => {
     setModalOpen(true);
   };
 
-  const handleDeleteBudget = (id: string) => {
+  const handleDeleteBudget = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this budget?")) return;
-    setBudgetList((prev) => prev.filter((item) => item._id !== id));
+    dispatch(budgetStart());
+    try {
+      await api.delete(API_ENDPOINTS.BUDGETS.BY_ID(id));
+      dispatch(deleteBudgetSuccess(id));
+      fetchBudgets();
+    } catch (err: any) {
+      dispatch(budgetFailure(err.response?.data?.message || "Failed to delete budget"));
+    }
   };
 
-  const handleSubmitBudget = (data: any) => {
-    if (data._id) {
-      setBudgetList((prev) =>
-        prev.map((item) => (item._id === data._id ? { ...item, ...data, spent: item.spent } : item))
-      );
-    } else {
-      setBudgetList((prev) => [
-        { ...data, _id: Date.now().toString(), spent: 0 },
-        ...prev,
-      ]);
+  const handleSubmitBudget = async (data: any) => {
+    dispatch(budgetStart());
+    try {
+      if (data._id) {
+        const response = await api.patch(API_ENDPOINTS.BUDGETS.BY_ID(data._id), data);
+        dispatch(updateBudgetSuccess(response.data.data));
+      } else {
+        const response = await api.post(API_ENDPOINTS.BUDGETS.BASE, data);
+        dispatch(createBudgetSuccess(response.data.data));
+      }
+      setModalOpen(false);
+      fetchBudgets();
+    } catch (err: any) {
+      dispatch(budgetFailure(err.response?.data?.message || "Failed to save budget"));
     }
   };
 
   const totalBudget = budgetList.reduce((sum, b) => sum + b.budgetAmount, 0);
-  const totalSpent = budgetList.reduce((sum, b) => sum + b.spent, 0);
+  const totalSpent = budgetList.reduce((sum, b) => sum + b.amountSpent, 0);
 
   return (
-    <Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, flexWrap: "wrap", gap: 2 }}>
-        <Typography variant="h5" fontWeight={600}>
-          Budgets
-        </Typography>
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <TextField
-            select
-            size="small"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            sx={{ minWidth: 130 }}
+    <div className="container-fluid p-0">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+          <h4 className="fw-bold text-dark mb-1">Budgets</h4>
+          <p className="text-muted small mb-0">Plan your finances and set spending limits</p>
+        </div>
+        <div className="d-flex gap-2 align-items-center">
+          <select
+            className="form-select form-select-sm border-light-subtle rounded-3 w-auto"
+            value={filters.month}
+            onChange={(e) => dispatch(setBudgetFilters({ month: Number(e.target.value) }))}
           >
             {months.map((month, index) => (
-              <MenuItem key={month} value={index}>
+              <option key={month} value={index}>
                 {month}
-              </MenuItem>
+              </option>
             ))}
-          </TextField>
-          <TextField
-            select
-            size="small"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            sx={{ minWidth: 100 }}
+          </select>
+          <select
+            className="form-select form-select-sm border-light-subtle rounded-3 w-auto"
+            value={filters.year}
+            onChange={(e) => dispatch(setBudgetFilters({ year: Number(e.target.value) }))}
           >
             {years.map((year) => (
-              <MenuItem key={year} value={year}>
+              <option key={year} value={year}>
                 {year}
-              </MenuItem>
+              </option>
             ))}
-          </TextField>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={handleAddBudget}
-            sx={{
-              textTransform: "none",
-              borderRadius: 2,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            }}
+          </select>
+          <button
+            className="btn btn-primary-gradient px-4 py-2 rounded-3 d-flex align-items-center gap-2 shadow-sm"
+            onClick={handleCreateBudget}
           >
+            <i className="bi bi-plus-lg"></i>
             Create Budget
-          </Button>
-        </Box>
-      </Box>
+          </button>
+        </div>
+      </div>
 
-      {/* Summary */}
-      <Box sx={{ display: "flex", gap: 3, mb: 4, flexWrap: "wrap" }}>
-        <Box sx={{ bgcolor: "#f8fafc", px: 3, py: 2, borderRadius: 2, minWidth: 180 }}>
-          <Typography variant="body2" color="text.secondary">Total Budget</Typography>
-          <Typography variant="h5" fontWeight={700} color="#667eea">₹{totalBudget.toLocaleString()}</Typography>
-        </Box>
-        <Box sx={{ bgcolor: "#f8fafc", px: 3, py: 2, borderRadius: 2, minWidth: 180 }}>
-          <Typography variant="body2" color="text.secondary">Total Spent</Typography>
-          <Typography variant="h5" fontWeight={700} color="#ef4444">₹{totalSpent.toLocaleString()}</Typography>
-        </Box>
-        <Box sx={{ bgcolor: "#f8fafc", px: 3, py: 2, borderRadius: 2, minWidth: 180 }}>
-          <Typography variant="body2" color="text.secondary">Remaining</Typography>
-          <Typography variant="h5" fontWeight={700} color="#22c55e">₹{(totalBudget - totalSpent).toLocaleString()}</Typography>
-        </Box>
-      </Box>
+      {error && (
+        <div className="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {error}
+        </div>
+      )}
+
+      {/* Summary Chips */}
+      <div className="row g-3 mb-4">
+        <div className="col-12 col-sm-4">
+          <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
+            <div className="card-body p-3">
+              <div className="text-muted small mb-1">Total Allocated</div>
+              <div className="h4 fw-bold mb-0 text-primary-custom">₹{totalBudget.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 col-sm-4">
+          <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
+            <div className="card-body p-3">
+              <div className="text-muted small mb-1">Total Spent</div>
+              <div className="h4 fw-bold mb-0 text-danger">₹{totalSpent.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 col-sm-4">
+          <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
+            <div className="card-body p-3">
+              <div className="text-muted small mb-1">Remaining Balance</div>
+              <div className="h4 fw-bold mb-0 text-success">₹{(totalBudget - totalSpent).toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Budget Cards Grid */}
-      <Box className="row g-3">
-        {budgetList.map((budget) => (
-          <Box key={budget._id} className="col-12 col-md-6 col-lg-4">
-            <BudgetCard
-              budget={budget}
-              onEdit={() => handleEditBudget(budget)}
-              onDelete={() => handleDeleteBudget(budget._id)}
-            />
-          </Box>
-        ))}
-      </Box>
+      <div className="row g-4">
+        {loading && budgetList.length === 0 ? (
+          <div className="col-12 text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : budgetList.length === 0 ? (
+          <div className="col-12">
+            <div className="p-5 text-center text-muted card border-0 rounded-4 shadow-sm">
+              <i className="bi bi-wallet2 fs-1 d-block mb-3 opacity-25"></i>
+              No budgets found for this period
+            </div>
+          </div>
+        ) : (
+          budgetList.map((budget) => (
+            <div key={budget._id} className="col-12 col-md-6 col-lg-4">
+              <BudgetCard
+                budget={budget}
+                onEdit={() => handleEditBudget(budget)}
+                onDelete={() => handleDeleteBudget(budget._id)}
+              />
+            </div>
+          ))
+        )}
+      </div>
 
       <BudgetModal
         open={modalOpen}
@@ -142,7 +193,7 @@ const Budgets = () => {
         onSubmit={handleSubmitBudget}
         budget={selectedBudget}
       />
-    </Box>
+    </div>
   );
 };
 

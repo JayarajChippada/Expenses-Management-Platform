@@ -1,4 +1,3 @@
-import { Card, CardContent, Typography, Box } from "@mui/material";
 import { type SummaryMetric } from "../dashboard.types";
 
 interface Props {
@@ -7,68 +6,44 @@ interface Props {
 
 const SummaryCard = ({ metric }: Props) => {
   return (
-    <Card
-      elevation={0}
-      sx={{
-        height: "100%",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-        transition: "transform 0.2s, box-shadow 0.2s",
-        "&:hover": {
-          transform: "translateY(-2px)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-        },
-      }}
-    >
-      <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <Box>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              {metric.title}
-            </Typography>
-            <Typography variant="h4" fontWeight={700} sx={{ color: metric.color || "text.primary" }}>
+    <div className="card h-100 shadow-sm card-hover border-0">
+      <div className="card-body p-3">
+        <div className="d-flex justify-content-between align-items-start">
+          <div>
+            <p className="text-muted small mb-1">{metric.title}</p>
+            <h4 className="fw-bold mb-0" style={{ color: metric.color || 'inherit' }}>
               {metric.value}
-            </Typography>
+            </h4>
             {metric.trend !== undefined && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  mt: 1,
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  fontWeight={600}
-                  sx={{ color: metric.positive ? "#22c55e" : "#ef4444" }}
+              <div className="d-flex align-items-center gap-1 mt-2">
+                <span
+                  className="small fw-semibold"
+                  style={{ color: metric.positive ? '#22c55e' : '#ef4444' }}
                 >
-                  {metric.positive ? "+" : "-"}{metric.trend}%
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
+                  {metric.positive ? '+' : '-'}{metric.trend}%
+                </span>
+                <span className="text-muted" style={{ fontSize: '12px' }}>
                   vs last month
-                </Typography>
-              </Box>
+                </span>
+              </div>
             )}
-          </Box>
+          </div>
           {metric.icon && (
-            <Box
-              sx={{
-                width: 48,
-                height: 48,
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                bgcolor: `${metric.color}15`,
+            <div
+              className="d-flex align-items-center justify-content-center rounded-3 shadow-sm"
+              style={{
+                width: '44px',
+                height: '44px',
+                backgroundColor: `${metric.color}15`,
                 color: metric.color,
               }}
             >
-              {metric.icon}
-            </Box>
+              <i className={`bi ${metric.icon} fs-4`}></i>
+            </div>
           )}
-        </Box>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 

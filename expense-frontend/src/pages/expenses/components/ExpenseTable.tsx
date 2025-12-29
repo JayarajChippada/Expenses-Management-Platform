@@ -1,19 +1,3 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Chip,
-  Box,
-  TablePagination,
-  Typography,
-} from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
-
 interface Expense {
   _id: string;
   date: string;
@@ -26,6 +10,7 @@ interface Expense {
 
 interface ExpenseTableProps {
   expenses: Expense[];
+  loading?: boolean;
   page: number;
   limit: number;
   total: number;
@@ -36,10 +21,10 @@ interface ExpenseTableProps {
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
-    "Food & Dining": "#667eea",
+    "Food & Dining": "#6366f1",
     Transportation: "#f59e0b",
     Shopping: "#22c55e",
-    Entertainment: "#8b5cf6",
+    Entertainment: "#a855f7",
     "Bills & Utilities": "#ef4444",
     Healthcare: "#ec4899",
     Travel: "#06b6d4",
@@ -48,19 +33,9 @@ const getCategoryColor = (category: string): string => {
   return colors[category] || "#64748b";
 };
 
-const getPaymentMethodColor = (method: string): string => {
-  const colors: Record<string, string> = {
-    Cash: "#22c55e",
-    "Credit Card": "#667eea",
-    "Debit Card": "#f59e0b",
-    UPI: "#8b5cf6",
-    "Net Banking": "#06b6d4",
-  };
-  return colors[method] || "#64748b";
-};
-
 const ExpenseTable = ({
   expenses,
+  loading,
   page,
   limit,
   total,
@@ -68,115 +43,133 @@ const ExpenseTable = ({
   onEdit,
   onDelete,
 }: ExpenseTableProps) => {
-  const handleChangePage = (_: unknown, newPage: number) => {
-    onPageChange(newPage + 1);
-  };
+  const totalPages = Math.ceil(total / limit);
+
+  if (loading) {
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Paper elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", borderRadius: 2 }}>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ bgcolor: "#f8fafc" }}>
-              <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Merchant</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Payment Method</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="right">Amount</TableCell>
-              <TableCell sx={{ fontWeight: 600 }} align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
+    <div className="card border-0 rounded-4 overflow-hidden shadow-sm">
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="bg-light border-bottom border-light">
+            <tr>
+              <th className="px-4 py-3 fw-bold text-muted small text-uppercase">Date</th>
+              <th className="py-3 fw-bold text-muted small text-uppercase">Merchant</th>
+              <th className="py-3 fw-bold text-muted small text-uppercase">Category</th>
+              <th className="py-3 fw-bold text-muted small text-uppercase text-end">Amount</th>
+              <th className="py-3 fw-bold text-muted small text-uppercase text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="border-top-0">
             {expenses.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                  <Typography color="text.secondary">No expenses found</Typography>
-                </TableCell>
-              </TableRow>
+              <tr>
+                <td colSpan={5} className="text-center py-5 text-muted">
+                  <div className="mb-2"><i className="bi bi-inbox fs-1 opacity-25"></i></div>
+                  No expenses found
+                </td>
+              </tr>
             ) : (
               expenses.map((expense) => (
-                <TableRow
-                  key={expense._id}
-                  sx={{
-                    "&:hover": { bgcolor: "#f8fafc" },
-                    transition: "background-color 0.2s",
-                  }}
-                >
-                  <TableCell>
-                    <Typography variant="body2">
-                      {new Date(expense.date).toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight={500}>
-                      {expense.merchant}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={expense.categoryName}
-                      size="small"
-                      sx={{
-                        bgcolor: `${getCategoryColor(expense.categoryName)}15`,
+                <tr key={expense._id}>
+                  <td className="px-4 py-3 text-muted small">
+                    {new Date(expense.date).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="py-3 fw-bold text-dark">{expense.merchant}</td>
+                  <td className="py-3">
+                    <span
+                      className="badge rounded-pill fw-medium"
+                      style={{
+                        backgroundColor: `${getCategoryColor(expense.categoryName)}15`,
                         color: getCategoryColor(expense.categoryName),
-                        fontWeight: 500,
+                        fontSize: '11px'
                       }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={expense.paymentMethod}
-                      size="small"
-                      variant="outlined"
-                      sx={{
-                        borderColor: getPaymentMethodColor(expense.paymentMethod),
-                        color: getPaymentMethodColor(expense.paymentMethod),
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="body2" fontWeight={600} color="#ef4444">
-                      -₹{expense.amount.toLocaleString()}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Box sx={{ display: "flex", justifyContent: "center", gap: 0.5 }}>
-                      <IconButton
-                        size="small"
+                    >
+                      {expense.categoryName}
+                    </span>
+                  </td>
+                  <td className="py-3 text-end fw-bold text-danger">
+                    -₹{expense.amount.toLocaleString()}
+                  </td>
+                  <td className="py-3 text-center">
+                    <div className="d-flex justify-content-center gap-1">
+                      <button
+                        className="btn btn-sm btn-light-primary text-primary border-0 rounded-circle p-2"
                         onClick={() => onEdit(expense)}
-                        sx={{ color: "#667eea" }}
+                        title="Edit"
+                        style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
+                      <button
+                        className="btn btn-sm btn-light-danger text-danger border-0 rounded-circle p-2"
                         onClick={() => onDelete(expense._id)}
-                        sx={{ color: "#ef4444" }}
+                        title="Delete"
+                        style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                </TableRow>
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))
             )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        component="div"
-        count={total}
-        page={page - 1}
-        onPageChange={handleChangePage}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[10]}
-        sx={{ borderTop: "1px solid rgba(0,0,0,0.08)" }}
-      />
-    </Paper>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="card-footer bg-white border-top border-light px-4 py-3 d-flex justify-content-between align-items-center">
+          <div className="small text-muted">
+            Showing <b>{(page - 1) * limit + 1}</b> to <b>{Math.min(page * limit, total)}</b> of <b>{total}</b>
+          </div>
+          <nav aria-label="Page navigation">
+            <ul className="pagination pagination-sm mb-0 gap-1">
+              <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+                <button
+                  className="page-link rounded-2 border-0 bg-light"
+                  onClick={() => onPageChange(page - 1)}
+                  disabled={page === 1}
+                >
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+              </li>
+              {[...Array(totalPages)].map((_, i) => (
+                <li key={i} className={`page-item ${page === i + 1 ? 'active' : ''}`}>
+                  <button 
+                    className={`page-link rounded-2 border-0 mx-1 ${page === i + 1 ? 'bg-primary-custom text-white' : 'bg-light text-muted'}`} 
+                    onClick={() => onPageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                </li>
+              ))}
+              <li className={`page-item ${page === totalPages ? 'disabled' : ''}`}>
+                <button
+                  className="page-link rounded-2 border-0 bg-light"
+                  onClick={() => onPageChange(page + 1)}
+                  disabled={page === totalPages}
+                >
+                  <i className="bi bi-chevron-right"></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
+    </div>
   );
 };
 

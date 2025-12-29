@@ -1,263 +1,257 @@
 import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  Alert,
-  CircularProgress,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import { Visibility, VisibilityOff, AccountBalanceWallet } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { authStart, authSuccess, authFailure } from "../../features/auth/authSlice";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
+import { validateEmail, validatePassword, validateName } from "../../utils/validation";
+
+type FormData = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+type FormErrors = {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string
+}
 
 const Register = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [successMessage, setSuccessMessage] = useState<string>("")
+  const [loading, setLoading] = useState<boolean> (false)
+  const [mandatory, setMandatory] = useState<boolean> (true)
 
-  const validateForm = () => {
-    const errors: Record<string, string> = {};
-    if (!formData.fullName.trim()) {
-      errors.fullName = "Full name is required";
+
+
+  const validateFields = (fieldName: string, fieldValue: string) => {
+    let errors: FormErrors = {...formErrors}
+    switch(fieldName) {
+      case "fullName": {
+        errors.fullName = validateName(fieldValue) || "";
+        break;
+      }
+      case "email": {
+        errors.email = validateEmail(fieldValue) || "";
+        break;
+      }
+      case "password": {
+        errors.password = validatePassword(fieldValue) || "";
+        break;
+      }
+      case "confirmPassword": {
+        if (!fieldValue) {
+          errors.confirmPassword = "Please confirm your password";
+        } else if (formData.password !== fieldValue) {
+          errors.confirmPassword = "Passwords do not match";
+        }
+        else {
+          errors.confirmPassword = ""
+        }
+        break;
+      }
     }
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Please enter a valid email";
-    }
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
-    }
-    if (!formData.confirmPassword) {
-      errors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    setFormErrors(errors)
+    const allFieldsFilled = Object.values(formData).every((val) => val !== "")
+    setMandatory(!allFieldsFilled)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (validationErrors[name]) {
-      setValidationErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    setFormData({...formData, [name]: value})
+    validateFields(name, value)
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    dispatch(authStart());
+    const isFormValid = Object.values(formErrors).every((val) => val === "")
+    if (!isFormValid) return;
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, {
+      setLoading(true)
+      await api.post(API_ENDPOINTS.AUTH.REGISTER, {
         fullName: formData.fullName,
-        email: formData.email,
+        email: formData.email, 
         password: formData.password,
       });
-      dispatch(authSuccess(response.data));
-      navigate("/dashboard");
+      setLoading(false)
+      setSuccessMessage("Registration successful! Redirecting to Login Page in 3 secs...")
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+      })
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000)
     } catch (err: any) {
-      dispatch(authFailure(err.response?.data?.message || "Registration failed. Please try again."));
+      setLoading(false)
+      setErrorMessage("Registration failed. Please try again.")
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+      })
     }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      }}
-    >
-      {/* Left Side - Branding */}
-      <Box
-        sx={{
-          flex: 1,
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          p: 6,
-          color: "white",
-        }}
-      >
-        <AccountBalanceWallet sx={{ fontSize: 80, mb: 3 }} />
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
-          Expense Manager
-        </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9, textAlign: "center", maxWidth: 400 }}>
-          Start your journey to financial freedom with smart expense tracking
-        </Typography>
-      </Box>
+    <div className="auth-bg d-flex align-items-center justify-content-center py-5">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+            <div className="card shadow-lg border-0 rounded-4">
+              <div className="card-body p-4 p-md-5">
+                {/* Logo */}
+                <div className="text-center mb-4">
+                  <i className="bi bi-wallet2 text-primary-custom" style={{ fontSize: '48px' }}></i>
+                  <h4 className="mt-2 fw-bold text-primary-custom">ExpenseManager</h4>
+                </div>
 
-      {/* Right Side - Register Form */}
-      <Box
-        sx={{
-          flex: { xs: 1, md: 0.8 },
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 3,
-          bgcolor: "#f5f7fb",
-          borderRadius: { md: "40px 0 0 40px" },
-        }}
-      >
-        <Card
-          elevation={0}
-          sx={{
-            width: "100%",
-            maxWidth: 420,
-            borderRadius: 3,
-            boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
-          }}
-        >
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              Create Account
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Sign up to start managing your expenses
-            </Typography>
+                <h5 className="text-center fw-bold mb-1">Create Account</h5>
+                <p className="text-center text-muted mb-4">Sign up to start managing your expenses</p>
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                {error}
-              </Alert>
-            )}
+                {errorMessage && (
+                  <div className="alert alert-danger py-2" role="alert">
+                    {errorMessage}
+                  </div>
+                )}
+                {successMessage && (
+                  <div className="alert alert-success py-2" role="alert">
+                    {successMessage}
+                  </div>
+                )}
 
-            <form onSubmit={handleSubmit}>
-              <TextField
-                fullWidth
-                label="Full Name"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                error={!!validationErrors.fullName}
-                helperText={validationErrors.fullName}
-                sx={{ mb: 2.5 }}
-                autoComplete="name"
-              />
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="fullName" className="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      className={`form-control ${formErrors.fullName ? 'is-invalid' : ''}`}
+                      id="fullName"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      placeholder="Enter your full name"
+                      autoComplete="name"
+                    />
+                    {formErrors.fullName && (
+                      <div className="invalid-feedback">{formErrors.fullName}</div>
+                    )}
+                  </div>
 
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!validationErrors.email}
-                helperText={validationErrors.email}
-                sx={{ mb: 2.5 }}
-                autoComplete="email"
-              />
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Enter your email"
+                      autoComplete="email"
+                    />
+                    {formErrors.email && (
+                      <div className="invalid-feedback">{formErrors.email}</div>
+                    )}
+                  </div>
 
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleChange}
-                error={!!validationErrors.password}
-                helperText={validationErrors.password}
-                sx={{ mb: 2.5 }}
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <div className="input-group">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter your password"
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
                         onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                        <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                      </button>
+                      {formErrors.password && (
+                        <div className="invalid-feedback">{formErrors.password}</div>
+                      )}
+                    </div>
+                  </div>
 
-              <TextField
-                fullWidth
-                label="Confirm Password"
-                name="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={!!validationErrors.confirmPassword}
-                helperText={validationErrors.confirmPassword}
-                sx={{ mb: 3 }}
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
+                  <div className="mb-4">
+                    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                    <div className="input-group">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        className={`form-control ${formErrors.confirmPassword ? 'is-invalid' : ''}`}
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="Confirm your password"
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        edge="end"
                       >
-                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                        <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                      </button>
+                      {formErrors.confirmPassword && (
+                        <div className="invalid-feedback">{formErrors.confirmPassword}</div>
+                      )}
+                    </div>
+                  </div>
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                disabled={loading}
-                sx={{
-                  py: 1.5,
-                  borderRadius: 2,
-                  textTransform: "none",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  "&:hover": {
-                    background: "linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)",
-                  },
-                }}
-              >
-                {loading ? <CircularProgress size={24} color="inherit" /> : "Create Account"}
-              </Button>
-            </form>
+                  <button
+                    type="submit"
+                    className="btn btn-primary-gradient w-100 py-2 fw-semibold"
+                    disabled={mandatory || loading}
+                  >
+                    {loading ? (
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    ) : null}
+                    Create Account
+                  </button>
+                </form>
 
-            <Typography variant="body2" sx={{ mt: 3, textAlign: "center" }}>
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "#667eea", fontWeight: 600 }}
-              >
-                Sign In
-              </Link>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    </Box>
+                <p className="text-center mt-4 mb-0">
+                  Already have an account?{" "}
+                  <Link to="/login" className="link-primary-custom fw-semibold">
+                    Sign In
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -1,75 +1,60 @@
-import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-  Chip,
-  IconButton,
-  TextField,
-  MenuItem,
-  InputAdornment,
-} from "@mui/material";
-import { Add, Edit, Delete, Search, Clear } from "@mui/icons-material";
+import { useState, useEffect, useCallback } from "react";
 import IncomeModal from "./components/IncomeModal";
-
-// Sample data for demo
-const sampleIncome = [
-  { _id: "1", date: "2024-12-25", source: "Monthly Salary", categoryName: "Salary", amount: 50000, paymentMethod: "Bank Transfer", notes: "" },
-  { _id: "2", date: "2024-12-20", source: "Freelance Project", categoryName: "Freelance", amount: 15000, paymentMethod: "UPI", notes: "" },
-  { _id: "3", date: "2024-12-15", source: "Stock Dividend", categoryName: "Dividends", amount: 2500, paymentMethod: "Bank Transfer", notes: "" },
-  { _id: "4", date: "2024-12-10", source: "Rental Income", categoryName: "Rental Income", amount: 18000, paymentMethod: "Net Banking", notes: "" },
-  { _id: "5", date: "2024-12-05", source: "Year-end Bonus", categoryName: "Bonus", amount: 25000, paymentMethod: "Bank Transfer", notes: "" },
-  { _id: "6", date: "2024-11-25", source: "Consulting Fee", categoryName: "Freelance", amount: 8000, paymentMethod: "UPI", notes: "" },
-  { _id: "7", date: "2024-11-20", source: "Interest Income", categoryName: "Investments", amount: 3200, paymentMethod: "Bank Transfer", notes: "" },
-];
-
-const categories = [
-  "All Categories",
-  "Salary",
-  "Freelance",
-  "Business",
-  "Investments",
-  "Rental Income",
-  "Dividends",
-  "Bonus",
-  "Others",
-];
-
-const getCategoryColor = (category: string): string => {
-  const colors: Record<string, string> = {
-    Salary: "#22c55e",
-    Freelance: "#667eea",
-    Business: "#f59e0b",
-    Investments: "#8b5cf6",
-    "Rental Income": "#06b6d4",
-    Dividends: "#ec4899",
-    Bonus: "#10b981",
-    Others: "#64748b",
-  };
-  return colors[category] || "#64748b";
-};
+import IncomeFilters from "./components/IncomeFilters";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { 
+  incomeStart,
+  incomeSuccess,
+  incomeFailure,
+  createIncomeSuccess,
+  updateIncomeSuccess,
+  deleteIncomeSuccess,
+  setIncomeFilters,
+  setIncomePage 
+} from "../../features/income/incomeSlice";
+import api from "../../services/axios";
+import { API_ENDPOINTS } from "../../services/endpoints";
 
 const Income = () => {
-  const [incomeList, setIncomeList] = useState(sampleIncome);
-  const [page, setPage] = useState(0);
+  const dispatch = useAppDispatch();
+  const { list, pagination, loading, filters, error } = useAppSelector((state) => state.income);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState<any>(null);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All Categories");
 
-  const filteredIncome = incomeList.filter((item) => {
-    const matchesSearch = item.source.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category === "All Categories" || item.categoryName === category;
-    return matchesSearch && matchesCategory;
-  });
+  const fetchAllIncome = useCallback(async () => {
+    dispatch(incomeStart());
+    try {
+      let endpoint = API_ENDPOINTS.INCOME.BASE;
+      let params: any = { ...filters };
+
+      if (filters.search) {
+        endpoint = API_ENDPOINTS.INCOME.SEARCH;
+      } else if (filters.category) {
+        endpoint = API_ENDPOINTS.INCOME.BY_CATEGORY(filters.category);
+        delete params.category;
+      } else if (filters.dateRange !== "ALL") {
+        endpoint = API_ENDPOINTS.INCOME.BY_DATE;
+        params.range = filters.dateRange;
+      }
+
+      const response = await api.get(endpoint, { params });
+      dispatch(incomeSuccess(response.data));
+    } catch (err: any) {
+      dispatch(incomeFailure(err.response?.data?.message || "Failed to fetch income"));
+    }
+  }, [dispatch, filters]);
+
+  useEffect(() => {
+    fetchAllIncome();
+  }, [fetchAllIncome]);
+
+  const handleFilterChange = (newFilters: any) => {
+    dispatch(setIncomeFilters(newFilters));
+  };
+
+  const handlePageChange = (newPage: number) => {
+    dispatch(setIncomePage(newPage));
+  };
 
   const handleAddIncome = () => {
     setSelectedIncome(null);
@@ -81,169 +66,190 @@ const Income = () => {
     setModalOpen(true);
   };
 
-  const handleDeleteIncome = (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this income?")) return;
-    setIncomeList((prev) => prev.filter((item) => item._id !== id));
-  };
-
-  const handleSubmitIncome = (data: any) => {
-    if (data._id) {
-      setIncomeList((prev) =>
-        prev.map((item) => (item._id === data._id ? { ...item, ...data } : item))
-      );
-    } else {
-      setIncomeList((prev) => [
-        { ...data, _id: Date.now().toString() },
-        ...prev,
-      ]);
+  const handleDeleteIncome = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this income entry?")) {
+      dispatch(incomeStart());
+      try {
+        await api.delete(API_ENDPOINTS.INCOME.BY_ID(id));
+        dispatch(deleteIncomeSuccess(id));
+        fetchAllIncome();
+      } catch (err: any) {
+        dispatch(incomeFailure(err.response?.data?.message || "Failed to delete income"));
+      }
     }
   };
 
-  const clearFilters = () => {
-    setSearch("");
-    setCategory("All Categories");
+  const handleSubmitIncome = async (data: any) => {
+    dispatch(incomeStart());
+    try {
+      if (data._id) {
+        const response = await api.patch(API_ENDPOINTS.INCOME.BY_ID(data._id), data);
+        dispatch(updateIncomeSuccess(response.data.data));
+      } else {
+        const response = await api.post(API_ENDPOINTS.INCOME.BASE, data);
+        dispatch(createIncomeSuccess(response.data.data));
+      }
+      setModalOpen(false);
+      fetchAllIncome();
+    } catch (err: any) {
+      dispatch(incomeFailure(err.response?.data?.message || "Failed to save income"));
+    }
+  };
+
+  const getCategoryColor = (category: string): string => {
+    const colors: Record<string, string> = {
+      Salary: "#22c55e",
+      Freelance: "#6366f1",
+      Business: "#f59e0b",
+      Investments: "#06b6d4",
+      "Rental Income": "#a855f7",
+      Dividends: "#ec4899",
+      Bonus: "#10b981",
+      Others: "#64748b",
+    };
+    return colors[category] || "#64748b";
   };
 
   return (
-    <Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-        <Typography variant="h5" fontWeight={600}>
-          Income
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
+    <div className="container-fluid p-0">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h4 className="fw-bold text-dark mb-1">Income</h4>
+          <p className="text-muted small mb-0">Track all your earnings and revenue sources</p>
+        </div>
+        <button
+          className="btn btn-primary-gradient px-4 py-2 rounded-3 d-flex align-items-center gap-2 shadow-sm"
           onClick={handleAddIncome}
-          sx={{
-            textTransform: "none",
-            borderRadius: 2,
-            background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-            "&:hover": {
-              background: "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
-            },
-          }}
+          style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}
         >
+          <i className="bi bi-plus-lg"></i>
           Add Income
-        </Button>
-      </Box>
+        </button>
+      </div>
 
-      {/* Filters */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 3 }}>
-        <TextField
-          size="small"
-          placeholder="Search income..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{ minWidth: 250, flexGrow: 1, maxWidth: 350 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search sx={{ color: "text.secondary" }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          select
-          size="small"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          sx={{ minWidth: 180 }}
-        >
-          {categories.map((cat) => (
-            <MenuItem key={cat} value={cat}>
-              {cat}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<Clear />}
-          onClick={clearFilters}
-          sx={{ textTransform: "none", borderColor: "divider", color: "text.secondary" }}
-        >
-          Clear
-        </Button>
-      </Box>
+      {error && (
+        <div className="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">
+          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          {error}
+        </div>
+      )}
 
-      {/* Table */}
-      <Paper elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", borderRadius: 2 }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: "#f8fafc" }}>
-                <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Source</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Payment Method</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Amount</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredIncome.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">No income records found</Typography>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredIncome.slice(page * 10, page * 10 + 10).map((income) => (
-                  <TableRow key={income._id} sx={{ "&:hover": { bgcolor: "#f8fafc" } }}>
-                    <TableCell>
-                      {new Date(income.date).toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" fontWeight={500}>
-                        {income.source}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={income.categoryName}
-                        size="small"
-                        sx={{
-                          bgcolor: `${getCategoryColor(income.categoryName)}15`,
-                          color: getCategoryColor(income.categoryName),
-                          fontWeight: 500,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>{income.paymentMethod}</TableCell>
-                    <TableCell align="right">
-                      <Typography variant="body2" fontWeight={600} color="#22c55e">
-                        +₹{income.amount.toLocaleString()}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton size="small" onClick={() => handleEditIncome(income)} sx={{ color: "#667eea" }}>
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" onClick={() => handleDeleteIncome(income._id)} sx={{ color: "#ef4444" }}>
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          component="div"
-          count={filteredIncome.length}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          rowsPerPage={10}
-          rowsPerPageOptions={[10]}
-          sx={{ borderTop: "1px solid rgba(0,0,0,0.08)" }}
-        />
-      </Paper>
+      <div className="card shadow-sm border-0 rounded-4 mb-4">
+        <div className="card-body p-4">
+          <IncomeFilters onFilterChange={handleFilterChange} />
+          
+          <div className="mt-4">
+            <div className="table-responsive">
+              <table className="table table-hover align-middle mb-0">
+                <thead className="bg-light border-bottom border-light">
+                  <tr>
+                    <th className="px-4 py-3 fw-bold text-muted small text-uppercase">Date</th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase">Source</th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase">Category</th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase text-end">Amount</th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="border-top-0">
+                  {loading && list.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-5">
+                        <div className="spinner-border text-primary" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : list.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="text-center py-5 text-muted">
+                        No income entries found
+                      </td>
+                    </tr>
+                  ) : (
+                    list.map((income) => (
+                      <tr key={income._id}>
+                        <td className="px-4 text-muted small">
+                          {new Date(income.date).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
+                        <td className="fw-bold text-dark">{income.source}</td>
+                        <td>
+                          <span
+                            className="badge rounded-pill fw-medium"
+                            style={{
+                              backgroundColor: `${getCategoryColor(income.categoryName)}15`,
+                              color: getCategoryColor(income.categoryName),
+                              fontSize: '11px'
+                            }}
+                          >
+                            {income.categoryName}
+                          </span>
+                        </td>
+                        <td className="text-end fw-bold text-success">
+                          +₹{income.amount.toLocaleString()}
+                        </td>
+                        <td className="text-center">
+                          <div className="d-flex justify-content-center gap-1">
+                            <button
+                              className="btn btn-sm btn-light-success text-success border-0 rounded-circle p-2"
+                              onClick={() => handleEditIncome(income)}
+                              title="Edit"
+                              style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              <i className="bi bi-pencil-square"></i>
+                            </button>
+                            <button
+                              className="btn btn-sm btn-light-danger text-danger border-0 rounded-circle p-2"
+                              onClick={() => handleDeleteIncome(income._id)}
+                              title="Delete"
+                              style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="px-4 py-3 d-flex justify-content-between align-items-center border-top">
+                <div className="small text-muted">
+                  Showing <b>{(pagination.page - 1) * pagination.limit + 1}</b> to <b>{Math.min(pagination.page * pagination.limit, pagination.total)}</b> of <b>{pagination.total}</b>
+                </div>
+                <nav aria-label="Page navigation">
+                  <ul className="pagination pagination-sm mb-0 gap-1">
+                    <li className={`page-item ${pagination.page === 1 ? 'disabled' : ''}`}>
+                      <button className="page-link rounded-2 border-0 bg-light" onClick={() => handlePageChange(pagination.page - 1)}>
+                        <i className="bi bi-chevron-left"></i>
+                      </button>
+                    </li>
+                    {[...Array(pagination.totalPages)].map((_, i) => (
+                      <li key={i} className={`page-item ${pagination.page === i + 1 ? 'active' : ''}`}>
+                        <button className={`page-link rounded-2 border-0 mx-1 ${pagination.page === i + 1 ? 'bg-primary text-white' : 'bg-light text-muted'}`} onClick={() => handlePageChange(i + 1)}>
+                          {i + 1}
+                        </button>
+                      </li>
+                    ))}
+                    <li className={`page-item ${pagination.page === pagination.totalPages ? 'disabled' : ''}`}>
+                      <button className="page-link rounded-2 border-0 bg-light" onClick={() => handlePageChange(pagination.page + 1)}>
+                        <i className="bi bi-chevron-right"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <IncomeModal
         open={modalOpen}
@@ -251,7 +257,7 @@ const Income = () => {
         onSubmit={handleSubmitIncome}
         income={selectedIncome}
       />
-    </Box>
+    </div>
   );
 };
 

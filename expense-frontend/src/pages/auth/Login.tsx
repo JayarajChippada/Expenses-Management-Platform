@@ -1,68 +1,73 @@
 import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-  Alert,
-  CircularProgress,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import { Visibility, VisibilityOff, AccountBalanceWallet } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { authStart, authSuccess, authFailure } from "../../features/auth/authSlice";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
+import { validateEmail } from "../../utils/validation";
+
+type FormData = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+}
+
+type FormErrors = {
+  email: string;
+  password: string
+}
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: "",
+    password: ""
+  });
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [successMessage, setSuccessMessage] = useState<string>("")
+  const [mandatory, setMandatory] = useState<boolean> (true)
 
-  const validateForm = () => {
-    const errors: Record<string, string> = {};
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Please enter a valid email";
+  const validateFields = (fieldName: string, fieldValue: string) => {
+    let errors: FormErrors = {...formErrors}
+    switch(fieldName) {
+      case "email": {
+        errors.email = validateEmail(fieldValue) || "";
+        break;
+      }
+      case "password": {
+        if(!fieldValue) {
+          errors.password = "Password is required"
+        }
+        else {
+          errors.password = ""
+        }
+        break;
+      }
     }
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    setFormErrors(errors)
+    const allFieldsFilled = Object.values(formData).every((val) => val !== "")
+    setMandatory(!allFieldsFilled)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "rememberMe" ? checked : value,
-    }));
-    if (validationErrors[name]) {
-      setValidationErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    setFormData({...formData, [name]: name === "rememberMe" ? checked : value})
+    validateFields(name, value)
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    const isFormValid = Object.values(formErrors).every((val) => val === "")
+    if (!isFormValid) return;
 
     dispatch(authStart());
     try {
@@ -71,177 +76,140 @@ const Login = () => {
         password: formData.password,
       });
       dispatch(authSuccess(response.data));
-      navigate("/dashboard");
+      setSuccessMessage("Login successful! Redirecting to Dashboard in 3 secs...")
+      setFormData({
+        email: "",
+        password: "",
+        rememberMe: false
+      })
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 3000)
     } catch (err: any) {
       dispatch(authFailure(err.response?.data?.message || "Login failed. Please try again."));
+      setErrorMessage(err.response?.data?.message || "Login failed. Please try again.")
+      setFormData({
+        email: "",
+        password: "",
+        rememberMe: false
+      })
     }
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      }}
-    >
-      {/* Left Side - Branding */}
-      <Box
-        sx={{
-          flex: 1,
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          p: 6,
-          color: "white",
-        }}
-      >
-        <AccountBalanceWallet sx={{ fontSize: 80, mb: 3 }} />
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
-          Expense Manager
-        </Typography>
-        <Typography variant="h6" sx={{ opacity: 0.9, textAlign: "center", maxWidth: 400 }}>
-          Take control of your finances with smart expense tracking and budget management
-        </Typography>
-      </Box>
+    <div className="auth-bg d-flex align-items-center justify-content-center py-5">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+            <div className="card shadow-lg border-0 rounded-4">
+              <div className="card-body p-4 p-md-5">
+                {/* Logo */}
+                <div className="text-center mb-4">
+                  <i className="bi bi-wallet2 text-primary-custom" style={{ fontSize: '48px' }}></i>
+                  <h4 className="mt-2 fw-bold text-primary-custom">ExpenseManager</h4>
+                </div>
 
-      {/* Right Side - Login Form */}
-      <Box
-        sx={{
-          flex: { xs: 1, md: 0.8 },
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 3,
-          bgcolor: "#f5f7fb",
-          borderRadius: { md: "40px 0 0 40px" },
-        }}
-      >
-        <Card
-          elevation={0}
-          sx={{
-            width: "100%",
-            maxWidth: 420,
-            borderRadius: 3,
-            boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
-          }}
-        >
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-              Welcome Back
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-              Sign in to continue to your dashboard
-            </Typography>
+                <h5 className="text-center fw-bold mb-1">Welcome Back</h5>
+                <p className="text-center text-muted mb-4">Sign in to continue to your dashboard</p>
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                {error}
-              </Alert>
-            )}
+                {errorMessage && (
+                  <div className="alert alert-danger py-2" role="alert">
+                    {errorMessage}
+                  </div>
+                )}
+                {successMessage && (
+                  <div className="alert alert-success py-2" role="alert">
+                    {successMessage}
+                  </div>
+                )}
 
-            <form onSubmit={handleSubmit}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!validationErrors.email}
-                helperText={validationErrors.email}
-                sx={{ mb: 3 }}
-                autoComplete="email"
-              />
-
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleChange}
-                error={!!validationErrors.password}
-                helperText={validationErrors.password}
-                sx={{ mb: 2 }}
-                autoComplete="current-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 3,
-                }}
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="rememberMe"
-                      checked={formData.rememberMe}
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                      id="email"
+                      name="email"
+                      value={formData.email}
                       onChange={handleChange}
-                      size="small"
+                      placeholder="Enter your email"
+                      autoComplete="email"
                     />
-                  }
-                  label={<Typography variant="body2">Remember me</Typography>}
-                />
-                <Link
-                  to="/forgot-password"
-                  style={{ textDecoration: "none", color: "#667eea", fontSize: 14 }}
-                >
-                  Forgot Password?
-                </Link>
-              </Box>
+                    {formErrors.email && (
+                      <div className="invalid-feedback">{formErrors.email}</div>
+                    )}
+                  </div>
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                disabled={loading}
-                sx={{
-                  py: 1.5,
-                  borderRadius: 2,
-                  textTransform: "none",
-                  fontSize: 16,
-                  fontWeight: 600,
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  "&:hover": {
-                    background: "linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)",
-                  },
-                }}
-              >
-                {loading ? <CircularProgress size={24} color="inherit" /> : "Sign In"}
-              </Button>
-            </form>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <div className="input-group">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter your password"
+                        autoComplete="current-password"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                      </button>
+                      {formErrors.password && (
+                        <div className="invalid-feedback">{formErrors.password}</div>
+                      )}
+                    </div>
+                  </div>
 
-            <Typography variant="body2" sx={{ mt: 3, textAlign: "center" }}>
-              Don't have an account?{" "}
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "#667eea", fontWeight: 600 }}
-              >
-                Sign Up
-              </Link>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    </Box>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="rememberMe"
+                        name="rememberMe"
+                        checked={formData.rememberMe}
+                        onChange={handleChange}
+                      />
+                      <label className="form-check-label small" htmlFor="rememberMe">
+                        Remember me
+                      </label>
+                    </div>
+                    <Link to="/forgot-password" className="link-primary-custom small">
+                      Forgot Password?
+                    </Link>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary-gradient w-100 py-2 fw-semibold"
+                    disabled={mandatory || loading}
+                  >
+                    {loading ? (
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    ) : null}
+                    Sign In
+                  </button>
+                </form>
+
+                <p className="text-center mt-4 mb-0">
+                  Don't have an account?{" "}
+                  <Link to="/register" className="link-primary-custom fw-semibold">
+                    Sign Up
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

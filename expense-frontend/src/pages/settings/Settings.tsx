@@ -1,35 +1,39 @@
 import { useState } from "react";
-import { Box, Typography, Tabs, Tab } from "@mui/material";
 import ProfileSettings from "./components/ProfileSettings";
 import PreferencesSettings from "./components/PreferencesSettings";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState(0);
 
+  const tabs = [
+    { label: "Profile Information", icon: "bi-person-badge" },
+    { label: "App Preferences", icon: "bi-gear-wide-connected" },
+  ];
+
   return (
-    <Box>
-      <Typography variant="h5" fontWeight={600} sx={{ mb: 3 }}>
-        Settings
-      </Typography>
+    <div className="container-fluid p-0">
+      <h4 className="fw-bold text-dark mb-4">Account Settings</h4>
 
-      <Tabs
-        value={activeTab}
-        onChange={(_, v) => setActiveTab(v)}
-        sx={{
-          mb: 3,
-          borderBottom: "1px solid rgba(0,0,0,0.08)",
-          "& .MuiTab-root": { textTransform: "none", fontWeight: 500 },
-        }}
-      >
-        <Tab label="Profile" />
-        <Tab label="Preferences" />
-      </Tabs>
+      {/* Tabs */}
+      <div className="bg-white p-1 rounded-4 shadow-sm d-inline-flex mb-4 border border-light">
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            className={`btn border-0 fw-bold px-4 py-2 d-flex align-items-center gap-2 transition-all rounded-3 ${activeTab === index ? 'bg-primary-light text-primary-custom' : 'text-muted'}`}
+            onClick={() => setActiveTab(index)}
+          >
+            <i className={`bi ${tab.icon}`}></i>
+            <span className="small">{tab.label}</span>
+          </button>
+        ))}
+      </div>
 
-      <Box>
+      {/* Tab Content */}
+      <div className="mt-2">
         {activeTab === 0 && <ProfileSettings />}
         {activeTab === 1 && <PreferencesSettings />}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

@@ -1,64 +1,123 @@
-import { Card, CardContent, Typography, Box } from "@mui/material";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { useMemo } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { useAppSelector } from "../../../app/hooks";
 
-// Sample data - will be connected to Redux
-const data = [
-  { name: "Food & Dining", value: 3500, color: "#667eea" },
-  { name: "Transportation", value: 2200, color: "#764ba2" },
-  { name: "Shopping", value: 1800, color: "#22c55e" },
-  { name: "Entertainment", value: 1200, color: "#f59e0b" },
-  { name: "Bills & Utilities", value: 2500, color: "#ef4444" },
-  { name: "Others", value: 800, color: "#8b5cf6" },
-];
+interface ChartData {
+  name: string;
+  value: number;
+  color: string;
+  [key: string]: any;
+}
 
 const CategoryPieChart = () => {
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+  const { expensesByCategory, categories } = useAppSelector(
+    (state) => state.dashboard
+  );
+
+  const chartData: ChartData[] = useMemo(() => {
+    if (!expensesByCategory?.length || !categories?.length) return [];
+
+    return expensesByCategory
+      .map((item: any) => {
+
+        const categoryName = item.category; 
+
+        const categoryInfo = categories.find(
+          (c: any) => c.categoryName === categoryName
+        );
+        return {
+          name: categoryName,
+          value: Number(item.amount) || 50,
+          color: categoryInfo?.color || "#63f184ff",
+        };
+      })
+      .filter((item) => item.value > 0);
+  }, [expensesByCategory, categories]);
+
+  const total = useMemo(
+    () => chartData.reduce((sum, item) => sum + item.value, 0),
+    [chartData]
+  );
+
+  if (!chartData.length) {
+    return (
+      <div className="card h-100 shadow-sm border-0 rounded-4">
+        <div className="card-body d-flex align-items-center justify-content-center text-muted">
+          No expense data available
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <Card elevation={0} sx={{ height: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
-      <CardContent sx={{ p: 3 }}>
-        <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
-          Expenses by Category
-        </Typography>
+    <div className="card h-100 shadow-sm border-0 rounded-4">
+      <div className="card-body p-4">
+        <h6 className="fw-bold mb-4">Expenses by Category</h6>
+
+
         <ResponsiveContainer width="100%" height={280}>
           <PieChart>
             <Pie
-              data={data}
+              data={chartData}
+              dataKey="value"
               cx="50%"
               cy="50%"
-              innerRadius={60}
+              innerRadius={70}
               outerRadius={90}
-              paddingAngle={4}
-              dataKey="value"
+              paddingAngle={5}
+              stroke="none"
             >
-              {data.map((entry, index) => (
+              {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
+
             <Tooltip
-              formatter={(value: number) => [`₹${value.toLocaleString()}`, '']}
-              contentStyle={{
-                borderRadius: 8,
-                border: "none",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              formatter={(value?: number, name?: string) => {
+                const safeValue = typeof value === "number" ? value : 0;
+                return [`₹${safeValue.toLocaleString()}`, name ?? ""];
               }}
+              contentStyle={{
+                borderRadius: 12,
+                border: "1px solid var(--border-color)",
+                boxShadow: "var(--shadow-md)",
+                backgroundColor: "var(--bg-card)",
+                color: "var(--text-main)",
+              }}
+              itemStyle={{ color: "var(--text-main)" }}
             />
           </PieChart>
         </ResponsiveContainer>
-        
-        {/* Legend */}
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5, mt: 2 }}>
-          {data.map((item) => (
-            <Box key={item.name} sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: item.color }} />
-              <Typography variant="caption" color="text.secondary">
-                {item.name} ({Math.round((item.value / total) * 100)}%)
-              </Typography>
-            </Box>
+
+        <div
+          className="d-flex flex-wrap gap-2 mt-3 overflow-auto"
+          style={{ maxHeight: "100px" }}
+        >
+          {chartData.map((item) => (
+            <div
+              key={item.name}
+              className="d-flex align-items-center gap-2 bg-light px-2 py-1 rounded-pill"
+            >
+              <span
+                className="rounded-circle"
+                style={{
+                  width: "8px",
+                  height: "8px",
+                  backgroundColor: item.color,
+                }}
+              />
+              <span className="extra-small fw-medium text-dark">
+                {item.name}
+              </span>
+              <span className="extra-small text-muted border-start ps-2">
+                ₹{item.value.toLocaleString()} (
+                {total > 0 ? Math.round((item.value / total) * 100) : 0}%)
+              </span>
+            </div>
           ))}
-        </Box>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 

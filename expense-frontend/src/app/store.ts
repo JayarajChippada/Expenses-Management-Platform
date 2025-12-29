@@ -7,6 +7,8 @@ import uiReducer from "../features/ui/uiSlice";
 import dashboardReducer from "../features/dashboard/dashboardSlice";
 import reportsReducer from "../features/reports/reportsSlice";
 import incomeReducer from "../features/income/incomeSlice";
+import categoryReducer from "../features/categories/categorySlice";
+import notificationReducer from "../features/notifications/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +20,8 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     reports: reportsReducer,
     income: incomeReducer,
+    categories: categoryReducer,
+    notifications: notificationReducer,
   },
 });
 

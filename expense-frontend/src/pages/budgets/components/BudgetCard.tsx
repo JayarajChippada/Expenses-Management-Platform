@@ -1,12 +1,9 @@
-import { Card, CardContent, Typography, Box, LinearProgress, IconButton, Chip } from "@mui/material";
-import { Edit, Delete, TrendingUp } from "@mui/icons-material";
-
 interface BudgetCardProps {
   budget: {
     _id: string;
     categoryName: string;
     budgetAmount: number;
-    spent: number;
+    amountSpent: number;
     period: { frequency: string };
   };
   onEdit: () => void;
@@ -15,10 +12,10 @@ interface BudgetCardProps {
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
-    "Food & Dining": "#667eea",
+    "Food & Dining": "#6366f1",
     Transportation: "#f59e0b",
     Shopping: "#22c55e",
-    Entertainment: "#8b5cf6",
+    Entertainment: "#a855f7",
     "Bills & Utilities": "#ef4444",
     Healthcare: "#ec4899",
     Travel: "#06b6d4",
@@ -28,121 +25,101 @@ const getCategoryColor = (category: string): string => {
 };
 
 const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
-  const percentage = Math.min((budget.spent / budget.budgetAmount) * 100, 100);
-  const isExceeded = budget.spent > budget.budgetAmount;
+  const percentage = Math.min((budget.amountSpent / budget.budgetAmount) * 100, 100);
+  const isExceeded = budget.amountSpent > budget.budgetAmount;
   const isWarning = percentage >= 80 && !isExceeded;
 
-  const getProgressColor = () => {
-    if (isExceeded) return "#ef4444";
-    if (isWarning) return "#f59e0b";
-    return "#22c55e";
+  const getProgressColorClass = () => {
+    if (isExceeded) return "bg-danger";
+    if (isWarning) return "bg-warning";
+    return "bg-primary-custom";
   };
 
-  const remaining = budget.budgetAmount - budget.spent;
+  const getProgressTextColorClass = () => {
+    if (isExceeded) return "text-danger";
+    if (isWarning) return "text-warning";
+    return "text-success";
+  };
+
+  const remaining = budget.budgetAmount - budget.amountSpent;
 
   return (
-    <Card
-      elevation={0}
-      sx={{
-        height: "100%",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-        transition: "transform 0.2s, box-shadow 0.2s",
-        "&:hover": {
-          transform: "translateY(-2px)",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-        },
-        borderLeft: `4px solid ${getCategoryColor(budget.categoryName)}`,
-      }}
+    <div
+      className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden"
+      style={{ borderTop: `4px solid ${getCategoryColor(budget.categoryName)}` }}
     >
-      <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
-          <Box>
-            <Typography variant="h6" fontWeight={600}>
-              {budget.categoryName}
-            </Typography>
-            <Chip
-              label={budget.period.frequency}
-              size="small"
-              sx={{ mt: 0.5, height: 22, fontSize: 11 }}
-            />
-          </Box>
-          <Box sx={{ display: "flex", gap: 0.5 }}>
-            <IconButton size="small" onClick={onEdit} sx={{ color: "#667eea" }}>
-              <Edit fontSize="small" />
-            </IconButton>
-            <IconButton size="small" onClick={onDelete} sx={{ color: "#ef4444" }}>
-              <Delete fontSize="small" />
-            </IconButton>
-          </Box>
-        </Box>
+      <div className="card-body p-4">
+        <div className="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h6 className="fw-bold mb-1 text-dark">{budget.categoryName}</h6>
+            <span className="badge bg-light text-muted fw-medium rounded-pill border border-light-subtle extra-small">
+              {budget.period.frequency}
+            </span>
+          </div>
+          <div className="d-flex gap-1">
+            <button
+              className="btn btn-sm btn-light text-primary border-0 rounded-circle p-2"
+              onClick={onEdit}
+              title="Edit"
+            >
+              <i className="bi bi-pencil-square"></i>
+            </button>
+            <button
+              className="btn btn-sm btn-light text-danger border-0 rounded-circle p-2"
+              onClick={onDelete}
+              title="Delete"
+            >
+              <i className="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
 
-        <Box sx={{ mb: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
-            <Typography variant="body2" color="text.secondary">
-              Spent
-            </Typography>
-            <Typography variant="body2" fontWeight={600} sx={{ color: getProgressColor() }}>
-              ₹{budget.spent.toLocaleString()} / ₹{budget.budgetAmount.toLocaleString()}
-            </Typography>
-          </Box>
-          <LinearProgress
-            variant="determinate"
-            value={percentage}
-            sx={{
-              height: 10,
-              borderRadius: 5,
-              bgcolor: "rgba(0,0,0,0.08)",
-              "& .MuiLinearProgress-bar": {
-                bgcolor: getProgressColor(),
-                borderRadius: 5,
-              },
-            }}
-          />
-        </Box>
+        <div className="mb-3">
+          <div className="d-flex justify-content-between mb-2">
+            <span className="small text-muted">Usage</span>
+            <span className={`small fw-bold ${getProgressTextColorClass()}`}>
+              ₹{budget.amountSpent.toLocaleString()} / ₹{budget.budgetAmount.toLocaleString()}
+            </span>
+          </div>
+          <div className="progress rounded-pill shadow-none bg-light" style={{ height: '8px' }}>
+            <div
+              className={`progress-bar rounded-pill ${getProgressColorClass()}`}
+              role="progressbar"
+              style={{ width: `${percentage}%` }}
+              aria-valuenow={percentage}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            ></div>
+          </div>
+        </div>
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography variant="caption" color="text.secondary">
-            {Math.round(percentage)}% used
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+        <div className="d-flex justify-content-between align-items-center">
+          <span className="extra-small text-muted fw-bold">
+            {Math.round(percentage)}% USED
+          </span>
+          <div className="d-flex align-items-center gap-1">
             {isExceeded ? (
-              <Typography variant="body2" fontWeight={600} color="#ef4444">
-                Exceeded by ₹{Math.abs(remaining).toLocaleString()}
-              </Typography>
+              <span className="extra-small fw-bold text-danger text-uppercase">
+                Over by ₹{Math.abs(remaining).toLocaleString()}
+              </span>
             ) : (
-              <Typography variant="body2" fontWeight={600} color="#22c55e">
-                ₹{remaining.toLocaleString()} remaining
-              </Typography>
+              <span className="extra-small fw-bold text-success text-uppercase">
+                ₹{remaining.toLocaleString()} left
+              </span>
             )}
-          </Box>
-        </Box>
+          </div>
+        </div>
 
-        {isExceeded && (
-          <Chip
-            label="Budget Exceeded!"
-            size="small"
-            sx={{
-              mt: 1.5,
-              bgcolor: "#fef2f2",
-              color: "#ef4444",
-              fontWeight: 500,
-            }}
-          />
+        {(isExceeded || isWarning) && (
+          <div className="mt-3">
+            <span className={`badge ${isExceeded ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning-emphasis'} border-0 rounded-pill fw-bold extra-small py-1 px-3 w-100`}>
+              <i className={`bi ${isExceeded ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill'} me-1`}></i>
+              {isExceeded ? 'Budget Exceeded!' : 'Nearly Exhausted'}
+            </span>
+          </div>
         )}
-        {isWarning && (
-          <Chip
-            label="Nearly Exhausted"
-            size="small"
-            sx={{
-              mt: 1.5,
-              bgcolor: "#fffbeb",
-              color: "#f59e0b",
-              fontWeight: 500,
-            }}
-          />
-        )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

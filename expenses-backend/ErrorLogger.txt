@@ -1,0 +1,1190 @@
+Error: Invalid email or password
+    at authService.signIn (E:\My_Projects\Expense-Management\expenses-backend\src\services\Auth.service.js:64:19)
+    at async authController.signIn (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Auth.controller.js:78:20)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Budgets validation failed: period.end: Path `end` is required., period.frequency: `Monthly` is not a valid enum value for path `frequency`.
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at Subdocument.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\types\subdocument.js:252:12)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async SingleNested.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async SingleNested.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async SchemaSubdocument.doValidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\schema\subdocument.js:297:5)
+    at async validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3144:7)
+    at async Promise.all (index 3)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Goals validation failed: categoryName: `Food` is not a valid enum value for path `categoryName`.
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 1)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:9:17)
+    at reportsController.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:9:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:9:17)
+    at reportsController.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:9:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getTrends (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:39:17)
+    at reportsController.getTrends (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:21:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getCategoryBreakdown (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:87:17)
+    at reportsController.getCategoryBreakdown (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:33:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getMerchantBreakdown (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:115:17)
+    at reportsController.getMerchantBreakdown (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:45:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+TypeError: Cannot read properties of null (reading 'startDate')
+    at incomeController.fetchIncomesByDate (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Income.controller.js:142:35)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at param (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:600:14)
+    at param (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:610:14)
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:664:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at param (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:600:14)
+    at param (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:610:14)
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:664:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+Error: Invalid email or password
+    at authService.signIn (E:\My_Projects\Expense-Management\expenses-backend\src\services\Auth.service.js:64:19)
+    at async authController.signIn (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Auth.controller.js:78:20)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'start' of 'getStartDateFromRange(...)' as it is null.
+    at dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:212:13)
+    at dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:50)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:9:17)
+    at reportsController.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:9:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+TypeError: Cannot destructure property 'startDate' of 'getStartDateFromRange(...)' as it is null.
+    at reportsService.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\services\Reports.service.js:9:17)
+    at reportsController.getOverview (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Reports.controller.js:9:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+ReferenceError: incomeModel is not defined
+    at getSummary (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:43:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async dashboardService.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\services\Dashboard.service.js:224:9)
+    at async dashboardController.fetchDashboardDetails (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Dashboard.controller.js:11:27)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Expenses validation failed: date: Future date not allowed
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 5)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+ValidationError: Expenses validation failed: date: Future date not allowed
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 7)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+ValidationError: Expenses validation failed: date: Future date not allowed
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 7)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+ReferenceError: date is not defined
+    at expenseController.updateExpense (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Expense.controller.js:216:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Expenses validation failed: date: Future date not allowed
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 7)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+ReferenceError: resObj is not defined
+    at expenseController.updateExpense (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Expense.controller.js:229:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Expenses validation failed: date: Future date not allowed
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 7)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+Error: Future Date is not allowed
+    at expenseController.updateExpense (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Expense.controller.js:217:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Enter a valid category
+    at Validator.validateCategory (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\validator.js:54:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async expenseController.updateExpense (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Expense.controller.js:213:7)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Categories not found!
+    at categoryController.fetchCategoryNamesByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Category.controller.js:59:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ValidationError: Incomes validation failed: paymentMethod: `Bank Transfer` is not a valid enum value for path `paymentMethod`.
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 4)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+Error: Future Date now allowed
+    at incomeController.updateIncome (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Income.controller.js:74:25)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:70:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Enter a valid category
+    at Validator.validateCategory (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\validator.js:54:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async budgetController.addBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:37:5)
+ValidationError: Budgets validation failed: period.end: Path `end` is required., period.frequency: `Monthly` is not a valid enum value for path `frequency`.
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at Subdocument.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\types\subdocument.js:252:12)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 0)
+    at async SingleNested.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async SingleNested.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async SchemaSubdocument.doValidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\schema\subdocument.js:297:5)
+    at async validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3144:7)
+    at async Promise.all (index 3)
+TypeError: period.start.getMonth is not a function
+    at budgetController.addBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:40:64)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+TypeError: period.start.getMonth is not a function
+    at budgetController.addBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:40:73)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+ReferenceError: categoryName is not defined
+    at budgetController.updateBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:149:48)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+ReferenceError: categoryName is not defined
+    at budgetController.updateBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:149:48)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+ReferenceError: categoryName is not defined
+    at budgetController.updateBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:149:48)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+ReferenceError: categoryName is not defined
+    at budgetController.updateBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:149:48)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+ReferenceError: categoryName is not defined
+    at budgetController.updateBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:149:48)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:28:7
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:261:12
+    at getSecret (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at module.exports [as verify] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:17:9)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:89:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Goals found!
+    at goalController.fetchGoalsByUserId (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:154:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+MongoServerSelectionError: getaddrinfo ENOTFOUND ac-bosmvxw-shard-00-00.ydpuoha.mongodb.net
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: getaddrinfo ENOTFOUND ac-bosmvxw-shard-00-00.ydpuoha.mongodb.net
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: No Budgets found!
+    at budgetController.fetchBudgets (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:90:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Error: Enter a valid category
+    at Validator.validateCategory (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\validator.js:54:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async budgetController.addBudget (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Budget.controller.js:37:5)
+ValidationError: Expenses validation failed: paymentMethod: `Cash` is not a valid enum value for path `paymentMethod`.
+    at Document.invalidate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3377:32)
+    at validatePath (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3152:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 4)
+    at async model.$__validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:3093:3)
+    at async model.validate (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\document.js:2670:5)
+    at async model.validateBeforeSave (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\plugins\validateBeforeSave.js:34:7)
+    at async Kareem.execPre (E:\My_Projects\Expense-Management\expenses-backend\node_modules\kareem\index.js:65:24)
+    at async model.$__save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\model.js:609:5)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at listOnTimeout (node:internal/timers:555:9)
+    at process.processTimers (node:internal/timers:529:7)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongoServerSelectionError: 842A0000:error:0A000438:SSL routines:ssl3_read_bytes:tlsv1 alert internal error:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1605:SSL alert number 80
+
+    at Topology.selectServer (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\sdam\topology.js:346:38)
+    at async tryOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:150:18)
+    at async executeOperation (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\operations\execute_operation.js:80:16)
+    at async FindCursor._initialize (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\find_cursor.js:62:26)
+    at async FindCursor.cursorInit (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:620:27)
+    at async FindCursor.fetchBatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:654:13)
+    at async FindCursor.next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:326:17)
+    at async [Symbol.asyncIterator] (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:254:34)
+    at async FindCursor.toArray (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:406:26)
+    at async model.Query._find (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\query.js:2436:14)
+MongooseError: Operation `expenses.aggregate()` buffering timed out after 10000ms
+    at Timeout._onTimeout (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:138:25)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+MongooseError: Operation `expenses.aggregate()` buffering timed out after 10000ms
+    at Timeout._onTimeout (E:\My_Projects\Expense-Management\expenses-backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:138:25)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+TypeError: Cannot read properties of undefined (reading 'split')
+    at verifyToken (E:\My_Projects\Expense-Management\expenses-backend\src\utilities\verifyUser.js:7:43)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\route.js:117:3)
+    at handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\lib\layer.js:152:17)
+    at E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:295:15
+    at processParams (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:582:12)
+    at next (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:291:5)
+    at Function.handle (E:\My_Projects\Expense-Management\expenses-backend\node_modules\router\index.js:186:3)
+ReferenceError: goal is not defined
+    at goalService.updateGoal (E:\My_Projects\Expense-Management\expenses-backend\src\services\Goal.service.js:42:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async goalController.updateGoal (E:\My_Projects\Expense-Management\expenses-backend\src\controllers\Goal.controller.js:72:20)

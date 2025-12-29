@@ -1,20 +1,27 @@
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
+    LOGIN: "/auth/sign-in",
+    REGISTER: "/auth/sign-up",
     FORGOT_PASSWORD: "/auth/forgot-password",
-    RESET_PASSWORD: "/auth/reset-password",
+    RESET_PASSWORD: (token: string) => `/auth/reset-password/${token}`,
     REFRESH: "/auth/refresh",
   },
-  EXPENSES: {
+  EXPENSES: { 
     BASE: "/expenses",
     BY_ID: (id: string) => `/expenses/${id}`,
     STATS: "/expenses/stats",
+    IMPORT: "/expenses/import",
+    SEARCH: "/expenses/search",
+    BY_DATE: "/expenses/date",
+    BY_CATEGORY: (category: string) => `/expenses/category/${category}`,
   },
   INCOME: {
     BASE: "/income",
     BY_ID: (id: string) => `/income/${id}`,
     STATS: "/income/stats",
+    SEARCH: "/income/search",
+    BY_DATE: "/income/date",
+    BY_CATEGORY: (category: string) => `/income/category/${category}`,
   },
   BUDGETS: {
     BASE: "/budgets",
@@ -24,11 +31,10 @@ export const API_ENDPOINTS = {
   GOALS: {
     BASE: "/goals",
     BY_ID: (id: string) => `/goals/${id}`,
+    ADD_FUNDS: (id: string) => `/goals/add-funds/${id}`,
   },
   DASHBOARD: {
-    SUMMARY: "/dashboard/summary",
-    CHARTS: "/dashboard/charts",
-    RECENT: "/dashboard/recent",
+    BASE: "/dashboard",
   },
   REPORTS: {
     OVERVIEW: "/reports/overview",
@@ -37,9 +43,23 @@ export const API_ENDPOINTS = {
     MERCHANTS: "/reports/merchants",
     EXPORT: "/reports/export",
   },
-  SETTINGS: {
-    PROFILE: "/settings/profile",
-    PREFERENCES: "/settings/preferences",
-    PASSWORD: "/settings/password",
+  USERS: {
+    BASE: "/users",
+    GET_USER: "/users",
+    UPDATE: (id: string) => `/users/update/${id}`,
+    SIGN_OUT: "/users/sign-out",
+  },
+  CATEGORIES: {
+    BASE: "/categories",
+    BY_TYPE: (type: string) => `/categories/${type}`,
+    NAMES: (type: string) => `/categories/names/${type}`,
+    BY_NAME: (name: string, type: string) => `/categories/${name}/${type}`,
+    BY_ID: (id: string) => `/categories/${id}`,
+  },
+  NOTIFICATIONS: {
+    BASE: "/notifications",
+    BY_ID: (id: string) => `/notifications/${id}`,
+    MARK_READ: (id: string) => `/notifications/${id}/read`,
+    MARK_ALL_READ: "/notifications/read-all",
   },
 };

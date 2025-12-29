@@ -1,4 +1,3 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
 import {
   BarChart,
   Bar,
@@ -11,108 +10,217 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { useMemo } from "react";
+import { useAppSelector } from "../../../app/hooks";
 
-const categoryData = [
-  { name: "Food & Dining", amount: 45000, color: "#667eea" },
-  { name: "Transportation", amount: 28000, color: "#f59e0b" },
-  { name: "Shopping", amount: 35000, color: "#22c55e" },
-  { name: "Entertainment", amount: 18000, color: "#8b5cf6" },
-  { name: "Bills & Utilities", amount: 32000, color: "#ef4444" },
-  { name: "Healthcare", amount: 12000, color: "#ec4899" },
-  { name: "Others", amount: 15000, color: "#64748b" },
-];
+/* Category color map (fallback-safe) */
+const CATEGORY_COLORS: Record<string, string> = {
+  Shopping: "#6366f1",
+  Food: "#22c55e",
+  Travel: "#f59e0b",
+  Entertainment: "#a855f7",
+  Bills: "#ef4444",
+  Uncategorized: "#94a3b8",
+};
 
 const ReportCategories = () => {
+  const { categories: rawCategoryData } = useAppSelector(
+    (state) => state.reports
+  );
+
+  /* ============================
+     NORMALIZE DATA (FIX)
+  ============================ */
+  const categoryData = useMemo(() => {
+    if (!rawCategoryData?.length) return [];
+
+    return rawCategoryData.map((item: any) => ({
+      name: item._id, // ✅ FIX
+      amount: Number(item.amount) || 0,
+      count: item.count || 0,
+      color: CATEGORY_COLORS[item._id] || "#6366f1",
+    }));
+  }, [rawCategoryData]);
+
+  if (!categoryData.length) {
+    return (
+      <div className="p-5 text-center text-muted">
+        <i className="bi bi-tags fs-1 d-block mb-3 opacity-25"></i>
+        No category data available for this period
+      </div>
+    );
+  }
+
   const total = categoryData.reduce((sum, item) => sum + item.amount, 0);
 
   return (
-    <Box>
-      <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
-        Expenses by Category
-      </Typography>
+    <div>
+      <div className="row g-4 mb-4">
+        {/* ============================
+            BAR CHART
+        ============================ */}
+        <div className="col-lg-7">
+          <div className="card h-100 shadow-sm border-0 rounded-4">
+            <div className="card-body p-4">
+              <h6 className="fw-bold mb-4 opacity-75 small text-uppercase">
+                Spending by Category
+              </h6>
 
-      <Box className="row g-3">
-        <Box className="col-lg-7">
-          <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Category Breakdown</Typography>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={categoryData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-                  <XAxis type="number" tickFormatter={(v) => `₹${v/1000}k`} axisLine={false} tickLine={false} />
-                  <YAxis type="category" dataKey="name" width={120} axisLine={false} tickLine={false} />
-                  <Tooltip formatter={(v: number) => [`₹${v.toLocaleString()}`, 'Amount']} />
-                  <Bar dataKey="amount" radius={[0, 4, 4, 0]}>
-                    {categoryData.map((entry, index) => (
-                      <Cell key={index} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Box>
-
-        <Box className="col-lg-5">
-          <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="subtitle2" sx={{ mb: 2 }}>Distribution</Typography>
-              <ResponsiveContainer width="100%" height={220}>
-                <PieChart>
-                  <Pie
+              <div style={{ height: "300px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
                     data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    dataKey="amount"
-                    paddingAngle={3}
+                    layout="vertical"
+                    margin={{ left: 20 }}
                   >
-                    {categoryData.map((entry, index) => (
-                      <Cell key={index} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(v: number) => [`₹${v.toLocaleString()}`, '']} />
-                </PieChart>
-              </ResponsiveContainer>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                {categoryData.map((item) => (
-                  <Box key={item.name} sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                    <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: item.color }} />
-                    <Typography variant="caption">{item.name}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-      </Box>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--border-color)"
+                      horizontal={false}
+                    />
+                    <XAxis
+                      type="number"
+                      tickFormatter={(v) => `₹${v / 1000}k`}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name" // ✅ FIX
+                      width={100}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      formatter={(v?: number) => [
+                        `₹${(v ?? 0).toLocaleString()}`,
+                        "Amount",
+                      ]}
+                    />
+                    <Bar
+                      dataKey="amount"
+                      radius={[0, 10, 10, 0]}
+                      barSize={18}
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {/* Category Details */}
-      <Card elevation={0} sx={{ boxShadow: "0 2px 12px rgba(0,0,0,0.08)", mt: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 2 }}>Category Details</Typography>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {categoryData.map((item) => (
-              <Box key={item.name} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 1, borderBottom: "1px solid #f0f0f0" }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Box sx={{ width: 12, height: 12, borderRadius: 1, bgcolor: item.color }} />
-                  <Typography variant="body2">{item.name}</Typography>
-                </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {Math.round((item.amount / total) * 100)}%
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
+        {/* ============================
+            PIE CHART
+        ============================ */}
+        <div className="col-lg-5">
+          <div className="card h-100 shadow-sm border-0 rounded-4">
+            <div className="card-body p-4">
+              <h6 className="fw-bold mb-4 opacity-75 small text-uppercase">
+                Distribution Percentage
+              </h6>
+
+              <div style={{ height: "220px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      dataKey="amount"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={90}
+                      paddingAngle={3}
+                      stroke="none"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      formatter={(v?: number) => [
+                        `₹${(v ?? 0).toLocaleString()}`,
+                        "",
+                      ]}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="d-flex flex-wrap gap-2 mt-4 justify-content-center">
+                {categoryData.map((item) => (
+                  <div
+                    key={item.name}
+                    className="d-flex align-items-center gap-1 bg-light px-2 py-1 rounded-pill"
+                  >
+                    <span
+                      className="rounded-circle"
+                      style={{
+                        width: 6,
+                        height: 6,
+                        backgroundColor: item.color,
+                      }}
+                    />
+                    <span className="extra-small fw-bold text-muted">
+                      {item.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ============================
+          TABLE
+      ============================ */}
+      <div className="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+        <div className="card-header bg-white p-4">
+          <h6 className="fw-bold mb-0">Detailed Category Metrics</h6>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
+            <thead className="bg-light">
+              <tr>
+                <th className="px-4 py-3">Category</th>
+                <th className="text-center">Share</th>
+                <th className="px-4 text-end">Amount Spent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categoryData.map((item) => (
+                <tr key={item.name}>
+                  <td className="px-4 fw-bold">{item.name}</td>
+                  <td className="text-center">
+                    {total > 0
+                      ? Math.round((item.amount / total) * 100)
+                      : 0}
+                    %
+                  </td>
+                  <td className="px-4 text-end fw-bold">
                     ₹{item.amount.toLocaleString()}
-                  </Typography>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot className="bg-light">
+              <tr>
+                <td className="px-4 fw-bold">TOTAL</td>
+                <td></td>
+                <td className="px-4 text-end fw-bold text-primary">
+                  ₹{total.toLocaleString()}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

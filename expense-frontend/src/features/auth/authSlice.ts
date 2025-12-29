@@ -2,12 +2,12 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { getStoredAuth } from './auth.utils';
 
 interface User {
-    id: string;
+    _id: string;
     fullName: string;
     lastName: string;
     email: string;
     currency: string;
-    timezone: string;
+    timeZone: string;
 }
 
 interface AuthState {
@@ -55,9 +55,15 @@ const authSlice = createSlice({
             state.isAuthenticated = false
             localStorage.removeItem("token")
             localStorage.removeItem("user");
+        },
+        updateUserSuccess(state, action: PayloadAction<User>) {
+            state.user = action.payload;
+            state.loading = false;
+            state.error = null;
+            localStorage.setItem("user", JSON.stringify(action.payload));
         }
     }
 })
 
-export const { authStart, authSuccess, authFailure, logOut } = authSlice.actions;
+export const { authStart, authSuccess, authFailure, logOut, updateUserSuccess } = authSlice.actions;
 export default authSlice.reducer;
