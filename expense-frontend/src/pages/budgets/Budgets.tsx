@@ -1,40 +1,61 @@
 import { useState, useEffect, useCallback } from "react";
 import BudgetCard from "./components/BudgetCard";
 import BudgetModal from "./components/BudgetModal";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { 
-  budgetStart, 
-  budgetSuccess, 
-  budgetFailure, 
-  createBudgetSuccess, 
-  updateBudgetSuccess, 
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  budgetStart,
+  budgetSuccess,
+  budgetFailure,
+  createBudgetSuccess,
+  updateBudgetSuccess,
   deleteBudgetSuccess,
-  setBudgetFilters
-} from "../../features/budgets/budgetSlice";
+  setBudgetFilters,
+} from "../../store/slices/budget.slice";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
 
 const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const currentYear = new Date().getFullYear();
 const years = [currentYear - 1, currentYear, currentYear + 1];
 
+import type { Budget } from "../../types/models";
+
 const Budgets = () => {
   const dispatch = useAppDispatch();
-  const { list: budgetList, loading, filters, error } = useAppSelector((state) => state.budgets);
+  const {
+    list: budgetList,
+    loading,
+    filters,
+    error,
+  } = useAppSelector((state) => state.budgets);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBudget, setSelectedBudget] = useState<any>(null);
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
   const fetchBudgets = useCallback(async () => {
     dispatch(budgetStart());
     try {
-      const response = await api.get(API_ENDPOINTS.BUDGETS.BASE, { params: filters });
+      const response = await api.get(API_ENDPOINTS.BUDGETS.BASE, {
+        params: filters,
+      });
       dispatch(budgetSuccess({ data: response.data.data || response.data }));
     } catch (err: any) {
-      dispatch(budgetFailure(err.response?.data?.message || "Failed to fetch budgets"));
+      dispatch(
+        budgetFailure(err.response?.data?.message || "Failed to fetch budgets")
+      );
     }
   }, [dispatch, filters]);
 
@@ -47,7 +68,7 @@ const Budgets = () => {
     setModalOpen(true);
   };
 
-  const handleEditBudget = (budget: any) => {
+  const handleEditBudget = (budget: Budget) => {
     setSelectedBudget(budget);
     setModalOpen(true);
   };
@@ -60,7 +81,9 @@ const Budgets = () => {
       dispatch(deleteBudgetSuccess(id));
       fetchBudgets();
     } catch (err: any) {
-      dispatch(budgetFailure(err.response?.data?.message || "Failed to delete budget"));
+      dispatch(
+        budgetFailure(err.response?.data?.message || "Failed to delete budget")
+      );
     }
   };
 
@@ -68,7 +91,10 @@ const Budgets = () => {
     dispatch(budgetStart());
     try {
       if (data._id) {
-        const response = await api.patch(API_ENDPOINTS.BUDGETS.BY_ID(data._id), data);
+        const response = await api.patch(
+          API_ENDPOINTS.BUDGETS.BY_ID(data._id),
+          data
+        );
         dispatch(updateBudgetSuccess(response.data.data));
       } else {
         const response = await api.post(API_ENDPOINTS.BUDGETS.BASE, data);
@@ -77,7 +103,9 @@ const Budgets = () => {
       setModalOpen(false);
       fetchBudgets();
     } catch (err: any) {
-      dispatch(budgetFailure(err.response?.data?.message || "Failed to save budget"));
+      dispatch(
+        budgetFailure(err.response?.data?.message || "Failed to save budget")
+      );
     }
   };
 
@@ -89,13 +117,17 @@ const Budgets = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div>
           <h4 className="fw-bold text-dark mb-1">Budgets</h4>
-          <p className="text-muted small mb-0">Plan your finances and set spending limits</p>
+          <p className="text-muted small mb-0">
+            Plan your finances and set spending limits
+          </p>
         </div>
         <div className="d-flex gap-2 align-items-center">
           <select
             className="form-select form-select-sm border-light-subtle rounded-3 w-auto"
             value={filters.month}
-            onChange={(e) => dispatch(setBudgetFilters({ month: Number(e.target.value) }))}
+            onChange={(e) =>
+              dispatch(setBudgetFilters({ month: Number(e.target.value) }))
+            }
           >
             {months.map((month, index) => (
               <option key={month} value={index}>
@@ -106,7 +138,9 @@ const Budgets = () => {
           <select
             className="form-select form-select-sm border-light-subtle rounded-3 w-auto"
             value={filters.year}
-            onChange={(e) => dispatch(setBudgetFilters({ year: Number(e.target.value) }))}
+            onChange={(e) =>
+              dispatch(setBudgetFilters({ year: Number(e.target.value) }))
+            }
           >
             {years.map((year) => (
               <option key={year} value={year}>
@@ -125,7 +159,10 @@ const Budgets = () => {
       </div>
 
       {error && (
-        <div className="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">
+        <div
+          className="alert alert-danger rounded-4 border-0 shadow-sm mb-4"
+          role="alert"
+        >
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
         </div>
@@ -137,7 +174,9 @@ const Budgets = () => {
           <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
             <div className="card-body p-3">
               <div className="text-muted small mb-1">Total Allocated</div>
-              <div className="h4 fw-bold mb-0 text-primary-custom">₹{totalBudget.toLocaleString()}</div>
+              <div className="h4 fw-bold mb-0 text-primary-custom">
+                ₹{totalBudget.toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
@@ -145,7 +184,9 @@ const Budgets = () => {
           <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
             <div className="card-body p-3">
               <div className="text-muted small mb-1">Total Spent</div>
-              <div className="h4 fw-bold mb-0 text-danger">₹{totalSpent.toLocaleString()}</div>
+              <div className="h4 fw-bold mb-0 text-danger">
+                ₹{totalSpent.toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
@@ -153,7 +194,9 @@ const Budgets = () => {
           <div className="card shadow-sm border-0 rounded-4 h-100 bg-light-subtle">
             <div className="card-body p-3">
               <div className="text-muted small mb-1">Remaining Balance</div>
-              <div className="h4 fw-bold mb-0 text-success">₹{(totalBudget - totalSpent).toLocaleString()}</div>
+              <div className="h4 fw-bold mb-0 text-success">
+                ₹{(totalBudget - totalSpent).toLocaleString()}
+              </div>
             </div>
           </div>
         </div>
@@ -187,12 +230,14 @@ const Budgets = () => {
         )}
       </div>
 
-      <BudgetModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmitBudget}
-        budget={selectedBudget}
-      />
+      {modalOpen && (
+        <BudgetModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleSubmitBudget}
+          budget={selectedBudget}
+        />
+      )}
     </div>
   );
 };

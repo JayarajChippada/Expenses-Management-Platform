@@ -1,41 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../../services/axios";
-import { API_ENDPOINTS } from "../../services/endpoints";
-import { validateEmail } from "../../utils/validation";
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import api from "../../services/axios"
+import { API_ENDPOINTS } from "../../services/endpoints"
+import { validateEmail } from "../../utils/validation"
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [validationError, setValidationError] = useState("");
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  // success state removed as we navigate away
+  const [validationError, setValidationError] = useState("")
+  
+  const navigate = useNavigate()
 
   const validateEmailField = () => {
-    const error = validateEmail(email);
+    const error = validateEmail(email)
     if (error) {
-      setValidationError(error);
-      return false;
+      setValidationError(error)
+      return false
     }
-    setValidationError("");
-    return true;
-  };
+    setValidationError("")
+    return true
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateEmailField()) return;
+    e.preventDefault()
+    if (!validateEmailField()) return
 
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError("")
     try {
-      await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
-      setSuccess(true);
+      const response = await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email })
+      // The backend returns { success: true, message: resetUrl }
+      const resetUrl = response.data.message
+      navigate("/reset-password", { state: { email, resetUrl } })
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send reset link. Please try again.");
+      setError(err.response?.data?.message || "Failed to send reset link. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="auth-bg d-flex align-items-center justify-content-center py-5">
@@ -61,63 +65,51 @@ const ForgotPassword = () => {
                   </div>
                 )}
 
-                {success ? (
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className={`form-control ${validationError ? 'is-invalid' : ''}`}
+                      id="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value)
+                        setValidationError("")
+                      }}
+                      placeholder="Enter your email"
+                      autoComplete="email"
+                    />
+                    {validationError && (
+                      <div className="invalid-feedback">{validationError}</div>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary-gradient w-100 py-2 fw-semibold mb-3"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                    ) : null}
+                    Send Reset Link
+                  </button>
+
                   <div className="text-center">
-                    <div className="alert alert-success" role="alert">
-                      Password reset link has been sent to your email address
-                    </div>
-                    <Link to="/login" className="btn btn-outline-primary">
-                      <i className="bi bi-arrow-left me-2"></i>
+                    <Link to="/login" className="link-primary-custom">
+                      <i className="bi bi-arrow-left me-1"></i>
                       Back to Login
                     </Link>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                      <label htmlFor="email" className="form-label">Email Address</label>
-                      <input
-                        type="email"
-                        className={`form-control ${validationError ? 'is-invalid' : ''}`}
-                        id="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setValidationError("");
-                        }}
-                        placeholder="Enter your email"
-                        autoComplete="email"
-                      />
-                      {validationError && (
-                        <div className="invalid-feedback">{validationError}</div>
-                      )}
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary-gradient w-100 py-2 fw-semibold mb-3"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                      ) : null}
-                      Send Reset Link
-                    </button>
-
-                    <div className="text-center">
-                      <Link to="/login" className="link-primary-custom">
-                        <i className="bi bi-arrow-left me-1"></i>
-                        Back to Login
-                      </Link>
-                    </div>
-                  </form>
-                )}
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ForgotPassword;
+export default ForgotPassword

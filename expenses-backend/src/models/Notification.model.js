@@ -43,8 +43,7 @@ const notificationSchema = Schema(
       default: false,
     },
   },
-  { timestamps: true },
-  { collection: "Notifications" }
+  { timestamps: true, collection: "Notifications" }
 );
 
 const notificationModel = mongoose.model("Notifications", notificationSchema);

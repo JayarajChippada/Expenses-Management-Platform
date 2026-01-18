@@ -70,8 +70,7 @@ const goalSchema = Schema(
       default: "medium",
     },
   },
-  { timestamps: true },
-  { collection: "Goals" }
+  { timestamps: true, collection: "Goals" }
 );
 
 const goalModel = mongoose.model("Goals", goalSchema);

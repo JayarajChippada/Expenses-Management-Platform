@@ -46,18 +46,16 @@ budgetService.fetchBudgets = async (userId, month, year) => {
       // ✅ overlap logic
       query.$and = [
         { "period.start": { $lte: endDate } },
-        { "period.end": { $gte: startDate } }
+        { "period.end": { $gte: startDate } },
       ];
     }
 
     return await budgetModel.find(query).sort({ createdAt: -1 });
-
   } catch (error) {
     console.log("Budget Service fetchBudgets() Error:", error);
     throw error;
   }
 };
-
 
 budgetService.fetchBudgetByCategory = async (userId, categoryName) => {
   try {

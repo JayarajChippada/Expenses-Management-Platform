@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import IncomeModal from "./components/IncomeModal";
 import IncomeFilters from "./components/IncomeFilters";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { 
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
   incomeStart,
   incomeSuccess,
   incomeFailure,
@@ -10,16 +10,22 @@ import {
   updateIncomeSuccess,
   deleteIncomeSuccess,
   setIncomeFilters,
-  setIncomePage 
-} from "../../features/income/incomeSlice";
+  setIncomePage,
+} from "../../store/slices/income.slice";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
 
+import type { Income as IncomeModel } from "../../types/models";
+
 const Income = () => {
   const dispatch = useAppDispatch();
-  const { list, pagination, loading, filters, error } = useAppSelector((state) => state.income);
+  const { list, pagination, loading, filters, error } = useAppSelector(
+    (state) => state.income
+  );
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState<any>(null);
+  const [selectedIncome, setSelectedIncome] = useState<IncomeModel | null>(
+    null
+  );
 
   const fetchAllIncome = useCallback(async () => {
     dispatch(incomeStart());
@@ -40,7 +46,9 @@ const Income = () => {
       const response = await api.get(endpoint, { params });
       dispatch(incomeSuccess(response.data));
     } catch (err: any) {
-      dispatch(incomeFailure(err.response?.data?.message || "Failed to fetch income"));
+      dispatch(
+        incomeFailure(err.response?.data?.message || "Failed to fetch income")
+      );
     }
   }, [dispatch, filters]);
 
@@ -61,7 +69,7 @@ const Income = () => {
     setModalOpen(true);
   };
 
-  const handleEditIncome = (income: any) => {
+  const handleEditIncome = (income: IncomeModel) => {
     setSelectedIncome(income);
     setModalOpen(true);
   };
@@ -74,7 +82,11 @@ const Income = () => {
         dispatch(deleteIncomeSuccess(id));
         fetchAllIncome();
       } catch (err: any) {
-        dispatch(incomeFailure(err.response?.data?.message || "Failed to delete income"));
+        dispatch(
+          incomeFailure(
+            err.response?.data?.message || "Failed to delete income"
+          )
+        );
       }
     }
   };
@@ -83,7 +95,10 @@ const Income = () => {
     dispatch(incomeStart());
     try {
       if (data._id) {
-        const response = await api.patch(API_ENDPOINTS.INCOME.BY_ID(data._id), data);
+        const response = await api.patch(
+          API_ENDPOINTS.INCOME.BY_ID(data._id),
+          data
+        );
         dispatch(updateIncomeSuccess(response.data.data));
       } else {
         const response = await api.post(API_ENDPOINTS.INCOME.BASE, data);
@@ -92,7 +107,9 @@ const Income = () => {
       setModalOpen(false);
       fetchAllIncome();
     } catch (err: any) {
-      dispatch(incomeFailure(err.response?.data?.message || "Failed to save income"));
+      dispatch(
+        incomeFailure(err.response?.data?.message || "Failed to save income")
+      );
     }
   };
 
@@ -115,12 +132,16 @@ const Income = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h4 className="fw-bold text-dark mb-1">Income</h4>
-          <p className="text-muted small mb-0">Track all your earnings and revenue sources</p>
+          <p className="text-muted small mb-0">
+            Track all your earnings and revenue sources
+          </p>
         </div>
         <button
           className="btn btn-primary-gradient px-4 py-2 rounded-3 d-flex align-items-center gap-2 shadow-sm"
           onClick={handleAddIncome}
-          style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}
+          style={{
+            background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+          }}
         >
           <i className="bi bi-plus-lg"></i>
           Add Income
@@ -128,7 +149,10 @@ const Income = () => {
       </div>
 
       {error && (
-        <div className="alert alert-danger rounded-4 border-0 shadow-sm mb-4" role="alert">
+        <div
+          className="alert alert-danger rounded-4 border-0 shadow-sm mb-4"
+          role="alert"
+        >
           <i className="bi bi-exclamation-triangle-fill me-2"></i>
           {error}
         </div>
@@ -137,24 +161,37 @@ const Income = () => {
       <div className="card shadow-sm border-0 rounded-4 mb-4">
         <div className="card-body p-4">
           <IncomeFilters onFilterChange={handleFilterChange} />
-          
+
           <div className="mt-4">
-            <div className="table-responsive">
+            <div className="d-none d-md-block table-responsive">
               <table className="table table-hover align-middle mb-0">
                 <thead className="bg-light border-bottom border-light">
                   <tr>
-                    <th className="px-4 py-3 fw-bold text-muted small text-uppercase">Date</th>
-                    <th className="py-3 fw-bold text-muted small text-uppercase">Source</th>
-                    <th className="py-3 fw-bold text-muted small text-uppercase">Category</th>
-                    <th className="py-3 fw-bold text-muted small text-uppercase text-end">Amount</th>
-                    <th className="py-3 fw-bold text-muted small text-uppercase text-center">Actions</th>
+                    <th className="px-4 py-3 fw-bold text-muted small text-uppercase">
+                      Date
+                    </th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase">
+                      Source
+                    </th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase">
+                      Category
+                    </th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase text-end">
+                      Amount
+                    </th>
+                    <th className="py-3 fw-bold text-muted small text-uppercase text-center">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="border-top-0">
                   {loading && list.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center py-5">
-                        <div className="spinner-border text-primary" role="status">
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
                           <span className="visually-hidden">Loading...</span>
                         </div>
                       </td>
@@ -180,9 +217,11 @@ const Income = () => {
                           <span
                             className="badge rounded-pill fw-medium"
                             style={{
-                              backgroundColor: `${getCategoryColor(income.categoryName)}15`,
+                              backgroundColor: `${getCategoryColor(
+                                income.categoryName
+                              )}15`,
                               color: getCategoryColor(income.categoryName),
-                              fontSize: '11px'
+                              fontSize: "11px",
                             }}
                           >
                             {income.categoryName}
@@ -197,7 +236,13 @@ const Income = () => {
                               className="btn btn-sm btn-light-success text-success border-0 rounded-circle p-2"
                               onClick={() => handleEditIncome(income)}
                               title="Edit"
-                              style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
                             >
                               <i className="bi bi-pencil-square"></i>
                             </button>
@@ -205,7 +250,13 @@ const Income = () => {
                               className="btn btn-sm btn-light-danger text-danger border-0 rounded-circle p-2"
                               onClick={() => handleDeleteIncome(income._id)}
                               title="Delete"
-                              style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
                             >
                               <i className="bi bi-trash"></i>
                             </button>
@@ -218,28 +269,134 @@ const Income = () => {
               </table>
             </div>
 
+            {/* Mobile Card View */}
+            <div className="d-md-none">
+              {loading && list.length === 0 ? (
+                <div className="text-center py-5">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : list.length === 0 ? (
+                <div className="text-center py-5 text-muted">
+                  No income entries found
+                </div>
+              ) : (
+                list.map((income) => (
+                  <div
+                    key={income._id}
+                    className="card border-0 shadow-sm rounded-4 mb-3"
+                  >
+                    <div className="card-body p-3">
+                      <div className="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                          <div className="fw-bold text-dark mb-1">
+                            {income.source}
+                          </div>
+                          <div className="text-muted small">
+                            {new Date(income.date).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </div>
+                        </div>
+                        <div className="fw-bold text-success fs-5">
+                          +₹{income.amount.toLocaleString()}
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mt-3">
+                        <span
+                          className="badge rounded-pill fw-medium"
+                          style={{
+                            backgroundColor: `${getCategoryColor(
+                              income.categoryName
+                            )}15`,
+                            color: getCategoryColor(income.categoryName),
+                            fontSize: "11px",
+                          }}
+                        >
+                          {income.categoryName}
+                        </span>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-sm btn-light-success text-success border-0 rounded-circle p-2"
+                            onClick={() => handleEditIncome(income)}
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+                          <button
+                            className="btn btn-sm btn-light-danger text-danger border-0 rounded-circle p-2"
+                            onClick={() => handleDeleteIncome(income._id)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
             {/* Pagination */}
             {pagination.totalPages > 1 && (
               <div className="px-4 py-3 d-flex justify-content-between align-items-center border-top">
                 <div className="small text-muted">
-                  Showing <b>{(pagination.page - 1) * pagination.limit + 1}</b> to <b>{Math.min(pagination.page * pagination.limit, pagination.total)}</b> of <b>{pagination.total}</b>
+                  Showing <b>{(pagination.page - 1) * pagination.limit + 1}</b>{" "}
+                  to{" "}
+                  <b>
+                    {Math.min(
+                      pagination.page * pagination.limit,
+                      pagination.total
+                    )}
+                  </b>{" "}
+                  of <b>{pagination.total}</b>
                 </div>
                 <nav aria-label="Page navigation">
                   <ul className="pagination pagination-sm mb-0 gap-1">
-                    <li className={`page-item ${pagination.page === 1 ? 'disabled' : ''}`}>
-                      <button className="page-link rounded-2 border-0 bg-light" onClick={() => handlePageChange(pagination.page - 1)}>
+                    <li
+                      className={`page-item ${
+                        pagination.page === 1 ? "disabled" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link rounded-2 border-0 bg-light"
+                        onClick={() => handlePageChange(pagination.page - 1)}
+                      >
                         <i className="bi bi-chevron-left"></i>
                       </button>
                     </li>
                     {[...Array(pagination.totalPages)].map((_, i) => (
-                      <li key={i} className={`page-item ${pagination.page === i + 1 ? 'active' : ''}`}>
-                        <button className={`page-link rounded-2 border-0 mx-1 ${pagination.page === i + 1 ? 'bg-primary text-white' : 'bg-light text-muted'}`} onClick={() => handlePageChange(i + 1)}>
+                      <li
+                        key={i}
+                        className={`page-item ${
+                          pagination.page === i + 1 ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className={`page-link rounded-2 border-0 mx-1 ${
+                            pagination.page === i + 1
+                              ? "bg-primary text-white"
+                              : "bg-light text-muted"
+                          }`}
+                          onClick={() => handlePageChange(i + 1)}
+                        >
                           {i + 1}
                         </button>
                       </li>
                     ))}
-                    <li className={`page-item ${pagination.page === pagination.totalPages ? 'disabled' : ''}`}>
-                      <button className="page-link rounded-2 border-0 bg-light" onClick={() => handlePageChange(pagination.page + 1)}>
+                    <li
+                      className={`page-item ${
+                        pagination.page === pagination.totalPages
+                          ? "disabled"
+                          : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link rounded-2 border-0 bg-light"
+                        onClick={() => handlePageChange(pagination.page + 1)}
+                      >
                         <i className="bi bi-chevron-right"></i>
                       </button>
                     </li>
@@ -251,12 +408,14 @@ const Income = () => {
         </div>
       </div>
 
-      <IncomeModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmitIncome}
-        income={selectedIncome}
-      />
+      {modalOpen && (
+        <IncomeModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleSubmitIncome}
+          income={selectedIncome}
+        />
+      )}
     </div>
   );
 };

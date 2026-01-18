@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 interface ChartData {
   name: string;
@@ -19,8 +19,7 @@ const CategoryPieChart = () => {
 
     return expensesByCategory
       .map((item: any) => {
-
-        const categoryName = item.category; 
+        const categoryName = item.category;
 
         const categoryInfo = categories.find(
           (c: any) => c.categoryName === categoryName
@@ -53,7 +52,6 @@ const CategoryPieChart = () => {
     <div className="card h-100 shadow-sm border-0 rounded-4">
       <div className="card-body p-4">
         <h6 className="fw-bold mb-4">Expenses by Category</h6>
-
 
         <ResponsiveContainer width="100%" height={280}>
           <PieChart>

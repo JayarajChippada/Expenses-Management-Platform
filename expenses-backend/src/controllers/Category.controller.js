@@ -26,8 +26,14 @@ categoryController.addCategory = async (req, res, next) => {
 
     if (resObj !== null) {
       res
+
         .status(201)
-        .json({ success: true, message: "Category added successfully!", data: resObj });
+
+        .json({
+          success: true,
+          message: "Category added successfully!",
+          data: resObj,
+        });
     } else {
       let error = new Error("Category Insertion");
 
@@ -40,23 +46,23 @@ categoryController.addCategory = async (req, res, next) => {
 
     next(error);
   }
-}; 
+};
 
-categoryController.fetchCategoryNamesByUserId = async (req, res, next) => {
+categoryController.fetchCategoriesByUserId = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const type = req.params.type
-    const categoryNames = await categoryService.fetchCategoryNamesByUserId(
-      userId, type
-    );
+
+    const categories = await categoryService.fetchCategoriesByUserId(userId);
 
     res.status(200).json({
       success: true,
-      data: categoryNames,
+
+      data: categories,
     });
   } catch (error) {
     console.log(
-      "Category Controller fetchCategoryNamesByUserId() method Error: ",
+      "Category Controller fetchCategoriesByUserId() method Error: ",
+
       error
     );
 
@@ -64,15 +70,48 @@ categoryController.fetchCategoryNamesByUserId = async (req, res, next) => {
   }
 };
 
-categoryController.fetchCategoriesByUserId = async (req, res, next) => {
+categoryController.fetchCategoryNamesByUserId = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const type = req.params.type
-    const categories = await categoryService.fetchCategoriesByUserId(userId, type);
+
+    const type = req.params.type;
+
+    const categoryNames = await categoryService.fetchCategoryNamesByUserId(
+      userId,
+      type
+    );
+
+    res.status(200).json({
+      success: true,
+
+      data: categoryNames,
+    });
+  } catch (error) {
+    console.log(
+      "Category Controller fetchCategoryNamesByUserId() method Error: ",
+
+      error
+    );
+
+    next(error);
+  }
+};
+
+categoryController.fetchCategoriesByType = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+
+    const type = req.params.type;
+
+    const categories = await categoryService.fetchCategoriesByType(
+      userId,
+      type
+    );
 
     if (categories !== null) {
       res.status(200).json({
         success: true,
+
         data: categories,
       });
     } else {
@@ -84,7 +123,8 @@ categoryController.fetchCategoriesByUserId = async (req, res, next) => {
     }
   } catch (error) {
     console.log(
-      "Category Controller fetchCategoriesByUserId() method Error: ",
+      "Category Controller fetchCategoriesByType() method Error: ",
+
       error
     );
 
@@ -95,7 +135,9 @@ categoryController.fetchCategoriesByUserId = async (req, res, next) => {
 categoryController.fetchCategory = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const type = req.params.type
+
+    const type = req.params.type;
+
     const categoryName = req.params.categoryName;
 
     if (!categoryName || categoryName === "") {
@@ -106,13 +148,16 @@ categoryController.fetchCategory = async (req, res, next) => {
       throw error;
     }
 
-    // await Validator.validateCategory(userId, categoryName)
-
-    const category = await categoryService.fetchCategory(userId, categoryName, type);
+    const category = await categoryService.fetchCategory(
+      userId,
+      categoryName,
+      type
+    );
 
     if (category !== null) {
       res.status(200).json({
         success: true,
+
         data: category,
       });
     } else {
@@ -133,27 +178,26 @@ categoryController.updateCategory = async (req, res, next) => {
   try {
     const userId = req.user.userId;
 
-    const categoryName = req.params.categoryName;
-
-    if (!categoryName || categoryName === "") {
-      let error = new Error("Category is required");
-
-      error.status = 400;
-
-      throw error;
-    }
+    const categoryId = req.params.categoryId;
 
     const categoryObj = new Category({ userId: userId, ...req.body });
 
     const resObj = await categoryService.updateCategory(
-      categoryName,
+      categoryId,
+
       categoryObj
     );
 
     if (resObj !== null) {
       res
+
         .status(200)
-        .json({ success: true, message: "Category updated successfully!", data: resObj });
+
+        .json({
+          success: true,
+          message: "Category updated successfully!",
+          data: resObj,
+        });
     } else {
       let error = new Error("Category Updation failed!");
 
@@ -163,6 +207,28 @@ categoryController.updateCategory = async (req, res, next) => {
     }
   } catch (error) {
     console.log("Category Controller updateCategory() method Error: ", error);
+
+    next(error);
+  }
+};
+
+categoryController.deleteCategory = async (req, res, next) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const resObj = await categoryService.deleteCategory(categoryId);
+
+    if (resObj !== null) {
+      res.status(200).json({ success: true, message: resObj.message });
+    } else {
+      let error = new Error("Expense deletion failed!");
+
+      error.status = 500;
+
+      throw error;
+    }
+  } catch (error) {
+    console.log("Category Controller deleteCategory() method Error:", error);
 
     next(error);
   }

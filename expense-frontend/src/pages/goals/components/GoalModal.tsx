@@ -1,28 +1,31 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { 
-  categoryStart, 
-  categoryFailure, 
-  categoryNamesSuccess 
-} from "../../../features/categories/categorySlice";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {
+  categoryStart,
+  categoryFailure,
+  categoryNamesSuccess,
+} from "../../../store/slices/category.slice";
 import api from "../../../services/axios";
 import { API_ENDPOINTS } from "../../../services/endpoints";
 import AddCategoryModal from "../../expenses/components/AddCategoryModal";
+
+import type { Goal } from "../../../types/models";
 
 interface GoalModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  goal?: any;
+  goal?: Goal | null;
 }
 
 const priorities = ["High", "Medium", "Low"];
 const GOAL_CATEGORIES = ["PURCHASE", "SAVINGS", "DEBT", "CUSTOM"];
 
 const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
-
   const dispatch = useAppDispatch();
-  const { names: backendCategories } = useAppSelector((state) => state.categories);
+  const { names: backendCategories } = useAppSelector(
+    (state) => state.categories
+  );
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   const fetchCategoryNames = useCallback(async () => {
@@ -31,51 +34,30 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
       const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("goal"));
       dispatch(categoryNamesSuccess(response.data.data));
     } catch (error: any) {
-      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+      dispatch(
+        categoryFailure(
+          error.response?.data?.message || "Failed to fetch categories"
+        )
+      );
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (open) {
-      fetchCategoryNames();
-    }
-  }, [open, fetchCategoryNames]);
+    fetchCategoryNames();
+  }, [fetchCategoryNames]);
 
   const [formData, setFormData] = useState({
-    title: "",
-    categoryName: "CUSTOM",
-    description: "",
-    targetAmount: "",
-    currentAmount: "",
-    priority: "Medium",
-    targetDate: "",
+    title: goal?.title || "",
+    categoryName: goal?.categoryName || "CUSTOM",
+    description: goal?.description || "",
+    targetAmount: goal?.targetAmount?.toString() || "",
+    currentAmount: goal?.currentAmount?.toString() || "0",
+    priority: goal?.priority
+      ? goal.priority.charAt(0).toUpperCase() + goal.priority.slice(1)
+      : "Medium",
+    targetDate: goal?.targetDate?.split("T")[0] || "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (goal) {
-      setFormData({
-        title: goal.title || "",
-        categoryName: goal.categoryName || "CUSTOM",
-        description: goal.description || "",
-        targetAmount: goal.targetAmount?.toString() || "",
-        currentAmount: goal.currentAmount?.toString() || "0",
-        priority: goal.priority?.charAt(0).toUpperCase() + goal.priority?.slice(1) || "Medium",
-        targetDate: goal.targetDate?.split("T")[0] || "",
-      });
-    } else {
-      setFormData({
-        title: "",
-        categoryName: "CUSTOM",
-        description: "",
-        targetAmount: "",
-        currentAmount: "0",
-        priority: "Medium",
-        targetDate: "",
-      });
-    }
-    setErrors({});
-  }, [goal, open]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -88,9 +70,13 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    
+
     if (name === "categoryName" && value === "Others") {
       setShowAddCategory(true);
       return;
@@ -105,7 +91,7 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
   const handleCategoryAdded = (newCategoryName?: string) => {
     setShowAddCategory(false);
     if (newCategoryName) {
-      setFormData(prev => ({ ...prev, categoryName: newCategoryName }));
+      setFormData((prev) => ({ ...prev, categoryName: newCategoryName }));
     }
   };
 
@@ -127,7 +113,11 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
 
   return (
     <>
-      <div className="modal fade show d-block shadow-sm" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+      <div
+        className="modal fade show d-block shadow-sm"
+        tabIndex={-1}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1060 }}
+      >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg rounded-4">
             <div className="modal-header border-bottom-0 px-4 pt-4">
@@ -145,44 +135,64 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
               <div className="modal-body px-4 py-3">
                 <div className="row g-3">
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Goal Name</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Goal Name
+                    </label>
                     <input
                       type="text"
-                      className={`form-control rounded-3 ${errors.title ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.title ? "is-invalid" : ""
+                      }`}
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
                       placeholder="e.g., Dream Home, New Laptop"
                     />
-                    {errors.title && <div className="invalid-feedback">{errors.title}</div>}
+                    {errors.title && (
+                      <div className="invalid-feedback">{errors.title}</div>
+                    )}
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Goal Category</label>
-                      <select
-                        className={`form-select rounded-3 ${errors.categoryName ? 'is-invalid' : ''}`}
-                        name="categoryName"
-                        value={formData.categoryName}
-                        onChange={handleChange}
-                      >
-                        <option value="">Select Category</option>
-                        {GOAL_CATEGORIES.map((cat) => (
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Goal Category
+                    </label>
+                    <select
+                      className={`form-select rounded-3 ${
+                        errors.categoryName ? "is-invalid" : ""
+                      }`}
+                      name="categoryName"
+                      value={formData.categoryName}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Category</option>
+                      {GOAL_CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                      {backendCategories
+                        .filter((cat) => !GOAL_CATEGORIES.includes(cat))
+                        .map((cat) => (
                           <option key={cat} value={cat}>
                             {cat}
                           </option>
                         ))}
-                        {backendCategories.filter(cat => !GOAL_CATEGORIES.includes(cat)).map((cat) => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                        <option value="Others" className="fw-bold text-primary">+ Add New Category</option>
-                      </select>
-                    {errors.categoryName && <div className="invalid-feedback">{errors.categoryName}</div>}
+                      <option value="Others" className="fw-bold text-primary">
+                        + Add New Category
+                      </option>
+                    </select>
+                    {errors.categoryName && (
+                      <div className="invalid-feedback">
+                        {errors.categoryName}
+                      </div>
+                    )}
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Description</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Description
+                    </label>
                     <textarea
                       className="form-control rounded-3"
                       name="description"
@@ -194,20 +204,30 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Target Amount (₹)</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Target Amount (₹)
+                    </label>
                     <input
                       type="number"
-                      className={`form-control rounded-3 ${errors.targetAmount ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.targetAmount ? "is-invalid" : ""
+                      }`}
                       name="targetAmount"
                       value={formData.targetAmount}
                       onChange={handleChange}
                       placeholder="0.00"
                     />
-                    {errors.targetAmount && <div className="invalid-feedback">{errors.targetAmount}</div>}
+                    {errors.targetAmount && (
+                      <div className="invalid-feedback">
+                        {errors.targetAmount}
+                      </div>
+                    )}
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Initially Saved (₹)</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Initially Saved (₹)
+                    </label>
                     <input
                       type="number"
                       className="form-control rounded-3"
@@ -219,7 +239,9 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Priority</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Priority
+                    </label>
                     <select
                       className="form-select rounded-3"
                       name="priority"
@@ -235,7 +257,9 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Target Date</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Target Date
+                    </label>
                     <input
                       type="date"
                       className="form-control rounded-3"
@@ -265,9 +289,9 @@ const GoalModal = ({ open, onClose, onSubmit, goal }: GoalModalProps) => {
           </div>
         </div>
       </div>
-      <AddCategoryModal 
-        show={showAddCategory} 
-        onClose={handleCategoryAdded} 
+      <AddCategoryModal
+        show={showAddCategory}
+        onClose={handleCategoryAdded}
         type="goal"
       />
     </>

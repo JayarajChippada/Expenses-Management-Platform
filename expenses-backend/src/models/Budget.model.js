@@ -75,8 +75,7 @@ const budgetSchema = Schema(
       default: true,
     },
   },
-  { timestamps: true },
-  { collection: "Budgets" }
+  { timestamps: true, collection: "Budgets" }
 );
 
 const budgetModel = mongoose.model("Budgets", budgetSchema);

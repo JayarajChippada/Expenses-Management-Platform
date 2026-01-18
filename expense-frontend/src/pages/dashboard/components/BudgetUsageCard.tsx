@@ -1,7 +1,9 @@
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 const BudgetUsageCard = () => {
-  const { budgetUsage, categories } = useAppSelector((state) => state.dashboard);
+  const { budgetUsage, categories } = useAppSelector(
+    (state) => state.dashboard
+  );
 
   return (
     <div className="card h-100 shadow-sm border-0 rounded-4">
@@ -12,27 +14,39 @@ const BudgetUsageCard = () => {
             budgetUsage.map((budget) => {
               const percentage = Math.min(budget.usedPercentage || 0, 100);
               const isOver = budget.spent > budget.limit;
-              const categoryInfo = categories?.find(c => c.categoryName === budget.category);
+              const categoryInfo = categories?.find(
+                (c) => c.categoryName === budget.category
+              );
               const color = categoryInfo?.color || "#6366f1";
-              
+
               return (
                 <div key={budget.category}>
                   <div className="d-flex justify-content-between mb-2">
                     <div className="d-flex align-items-center gap-2">
                       <span className="small fs-6">{categoryInfo?.icon}</span>
-                      <span className="small fw-bold text-dark">{budget.category}</span>
+                      <span className="small fw-bold text-dark">
+                        {budget.category}
+                      </span>
                     </div>
-                    <span className={`small fw-bold ${isOver ? 'text-danger' : 'text-muted'}`}>
-                      ₹{budget.spent.toLocaleString()} / ₹{budget.limit.toLocaleString()}
+                    <span
+                      className={`small fw-bold ${
+                        isOver ? "text-danger" : "text-muted"
+                      }`}
+                    >
+                      ₹{budget.spent.toLocaleString()} / ₹
+                      {budget.limit.toLocaleString()}
                     </span>
                   </div>
-                  <div className="progress rounded-pill" style={{ height: '8px', backgroundColor: '#f1f5f9' }}>
+                  <div
+                    className="progress rounded-pill"
+                    style={{ height: "8px", backgroundColor: "#f1f5f9" }}
+                  >
                     <div
                       className="progress-bar rounded-pill"
                       role="progressbar"
-                      style={{ 
+                      style={{
                         width: `${percentage}%`,
-                        backgroundColor: isOver ? '#ef4444' : color 
+                        backgroundColor: isOver ? "#ef4444" : color,
                       }}
                       aria-valuenow={percentage}
                       aria-valuemin={0}
@@ -54,4 +68,3 @@ const BudgetUsageCard = () => {
 };
 
 export default BudgetUsageCard;
-

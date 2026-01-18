@@ -1,22 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { 
-  categoryStart, 
-  categoryFailure, 
-  categoryNamesSuccess 
-} from "../../../features/categories/categorySlice";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {
+  categoryStart,
+  categoryFailure,
+  categoryNamesSuccess,
+} from "../../../store/slices/category.slice";
 import AddCategoryModal from "../../expenses/components/AddCategoryModal";
 import api from "../../../services/axios";
 import { API_ENDPOINTS } from "../../../services/endpoints";
+
+import type { Income } from "../../../types/models";
 
 interface IncomeModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  income?: any;
+  income?: Income | null;
 }
 
-const paymentMethods = ["Bank Transfer", "Cash", "Cheque", "UPI", "Net Banking"];
+const paymentMethods = [
+  "Bank Transfer",
+  "Cash",
+  "Cheque",
+  "UPI",
+  "Net Banking",
+];
 
 const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
   const dispatch = useAppDispatch();
@@ -24,12 +32,12 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().split("T")[0],
-    source: "",
-    categoryName: "",
-    amount: "",
-    paymentMethod: "",
-    notes: "",
+    date: income?.date?.split("T")[0] || new Date().toISOString().split("T")[0],
+    source: income?.source || "",
+    categoryName: income?.categoryName || "",
+    amount: income?.amount?.toString() || "",
+    paymentMethod: income?.paymentMethod || "",
+    notes: income?.notes || "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -37,42 +45,20 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
     dispatch(categoryStart());
     try {
       const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("income"));
-      console.log(response)
+      console.log(response);
       dispatch(categoryNamesSuccess(response.data.data));
     } catch (error: any) {
-      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+      dispatch(
+        categoryFailure(
+          error.response?.data?.message || "Failed to fetch categories"
+        )
+      );
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (open) {
-      console.log("Its opened")
-      fetchCategoryNames();
-    }
-  }, [open, fetchCategoryNames]);
-
-  useEffect(() => {
-    if (income) {
-      setFormData({
-        date: income.date?.split("T")[0] || new Date().toISOString().split("T")[0],
-        source: income.source || "",
-        categoryName: income.categoryName || "",
-        amount: income.amount?.toString() || "",
-        paymentMethod: income.paymentMethod || "",
-        notes: income.notes || "",
-      });
-    } else {
-      setFormData({
-        date: new Date().toISOString().split("T")[0],
-        source: "",
-        categoryName: "",
-        amount: "",
-        paymentMethod: "",
-        notes: "",
-      });
-    }
-    setErrors({});
-  }, [income, open]);
+    fetchCategoryNames();
+  }, [fetchCategoryNames]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -86,9 +72,13 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     const { name, value } = e.target;
-    
+
     if (name === "categoryName" && value === "Others") {
       setShowAddCategory(true);
       return;
@@ -103,14 +93,14 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
   const handleCategoryAdded = (newCategoryName?: string) => {
     setShowAddCategory(false);
     if (newCategoryName) {
-      setFormData(prev => ({ ...prev, categoryName: newCategoryName }));
+      setFormData((prev) => ({ ...prev, categoryName: newCategoryName }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     onSubmit({
       ...formData,
       amount: parseFloat(formData.amount),
@@ -123,7 +113,11 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
 
   return (
     <>
-      <div className="modal fade show d-block shadow-sm" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+      <div
+        className="modal fade show d-block shadow-sm"
+        tabIndex={-1}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1060 }}
+      >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg rounded-4">
             <div className="modal-header border-bottom-0 px-4 pt-4">
@@ -141,34 +135,50 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
               <div className="modal-body px-4 py-3">
                 <div className="row g-3">
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Date Received</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Date Received
+                    </label>
                     <input
                       type="date"
-                      className={`form-control rounded-3 ${errors.date ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.date ? "is-invalid" : ""
+                      }`}
                       name="date"
                       value={formData.date}
                       onChange={handleChange}
                     />
-                    {errors.date && <div className="invalid-feedback">{errors.date}</div>}
+                    {errors.date && (
+                      <div className="invalid-feedback">{errors.date}</div>
+                    )}
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Source / Payer</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Source / Payer
+                    </label>
                     <input
                       type="text"
-                      className={`form-control rounded-3 ${errors.source ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.source ? "is-invalid" : ""
+                      }`}
                       name="source"
                       value={formData.source}
                       onChange={handleChange}
                       placeholder="e.g. Salary, Client Name"
                     />
-                    {errors.source && <div className="invalid-feedback">{errors.source}</div>}
+                    {errors.source && (
+                      <div className="invalid-feedback">{errors.source}</div>
+                    )}
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Category</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Category
+                    </label>
                     <select
-                      className={`form-select rounded-3 ${errors.categoryName ? 'is-invalid' : ''}`}
+                      className={`form-select rounded-3 ${
+                        errors.categoryName ? "is-invalid" : ""
+                      }`}
                       name="categoryName"
                       value={formData.categoryName}
                       onChange={handleChange}
@@ -179,26 +189,40 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
                           {cat}
                         </option>
                       ))}
-                      <option value="Others" className="fw-bold text-primary">+ Add New Category</option>
+                      <option value="Others" className="fw-bold text-primary">
+                        + Add New Category
+                      </option>
                     </select>
-                    {errors.categoryName && <div className="invalid-feedback">{errors.categoryName}</div>}
+                    {errors.categoryName && (
+                      <div className="invalid-feedback">
+                        {errors.categoryName}
+                      </div>
+                    )}
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Amount (₹)</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Amount (₹)
+                    </label>
                     <input
                       type="number"
-                      className={`form-control rounded-3 ${errors.amount ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.amount ? "is-invalid" : ""
+                      }`}
                       name="amount"
                       value={formData.amount}
                       onChange={handleChange}
                       placeholder="0.00"
                     />
-                    {errors.amount && <div className="invalid-feedback">{errors.amount}</div>}
+                    {errors.amount && (
+                      <div className="invalid-feedback">{errors.amount}</div>
+                    )}
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Payment Method</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Payment Method
+                    </label>
                     <select
                       className="form-select rounded-3"
                       name="paymentMethod"
@@ -215,7 +239,9 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Notes (Optional)</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Notes (Optional)
+                    </label>
                     <textarea
                       className="form-control rounded-3"
                       name="notes"
@@ -238,7 +264,10 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
                 <button
                   type="submit"
                   className="btn px-4 rounded-3 fw-bold text-white shadow-sm"
-                  style={{ background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)' }}
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                  }}
                 >
                   {income ? "Save Changes" : "Save Income"}
                 </button>
@@ -247,9 +276,9 @@ const IncomeModal = ({ open, onClose, onSubmit, income }: IncomeModalProps) => {
           </div>
         </div>
       </div>
-      <AddCategoryModal 
-        show={showAddCategory} 
-        onClose={handleCategoryAdded} 
+      <AddCategoryModal
+        show={showAddCategory}
+        onClose={handleCategoryAdded}
         type="income"
       />
     </>

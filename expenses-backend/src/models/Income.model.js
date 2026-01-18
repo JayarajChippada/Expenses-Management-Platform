@@ -25,7 +25,7 @@ const incomeSchema = Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["UPI",  "Cash", "Net Banking", "Cheque", "Bank Transfer"],
+      enum: ["UPI", "Cash", "Net Banking", "Cheque", "Bank Transfer"],
       required: true,
     },
     date: {
@@ -39,8 +39,7 @@ const incomeSchema = Schema(
       default: "",
     },
   },
-  { timestamps: true },
-  { collection: "Incomes" }
+  { timestamps: true, collection: "Incomes" }
 );
 
 const incomeModel = mongoose.model("Incomes", incomeSchema);

@@ -44,8 +44,7 @@ const categorySchema = Schema(
       default: "expense",
     },
   },
-  { timestamps: true },
-  { collection: "Categories" }
+  { timestamps: true, collection: "Categories" }
 );
 
 const categoryModel = mongoose.model("Categories", categorySchema);

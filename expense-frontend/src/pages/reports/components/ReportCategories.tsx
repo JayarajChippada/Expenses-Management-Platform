@@ -11,7 +11,7 @@ import {
   Cell,
 } from "recharts";
 import { useMemo } from "react";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 /* Category color map (fallback-safe) */
 const CATEGORY_COLORS: Record<string, string> = {
@@ -97,11 +97,7 @@ const ReportCategories = () => {
                         "Amount",
                       ]}
                     />
-                    <Bar
-                      dataKey="amount"
-                      radius={[0, 10, 10, 0]}
-                      barSize={18}
-                    >
+                    <Bar dataKey="amount" radius={[0, 10, 10, 0]} barSize={18}>
                       {categoryData.map((entry, index) => (
                         <Cell key={index} fill={entry.color} />
                       ))}
@@ -197,10 +193,7 @@ const ReportCategories = () => {
                 <tr key={item.name}>
                   <td className="px-4 fw-bold">{item.name}</td>
                   <td className="text-center">
-                    {total > 0
-                      ? Math.round((item.amount / total) * 100)
-                      : 0}
-                    %
+                    {total > 0 ? Math.round((item.amount / total) * 100) : 0}%
                   </td>
                   <td className="px-4 text-end fw-bold">
                     ₹{item.amount.toLocaleString()}

@@ -20,7 +20,7 @@ goalService.addGoal = async (goalObj) => {
         resObj._id
       );
 
-      if (resObj.status === 'completed') {
+      if (resObj.status === "completed") {
         await notificationService.createNotification(
           resObj.userId,
           "GOAL_ACHIEVED",
@@ -42,7 +42,7 @@ goalService.addGoal = async (goalObj) => {
 goalService.updateGoal = async (goalId, goalObj) => {
   try {
     const prevGoalObj = await goalModel.findOne({ _id: goalId });
-    const wasCompleted = prevGoalObj.status === 'completed';
+    const wasCompleted = prevGoalObj.status === "completed";
 
     if (goalObj.categoryName) prevGoalObj.categoryName = goalObj.categoryName;
 
@@ -68,7 +68,7 @@ goalService.updateGoal = async (goalId, goalObj) => {
     const resObj = await prevGoalObj.save();
 
     if (resObj) {
-      if (!wasCompleted && resObj.status === 'completed') {
+      if (!wasCompleted && resObj.status === "completed") {
         await notificationService.createNotification(
           resObj.userId,
           "GOAL_ACHIEVED",
@@ -116,7 +116,7 @@ goalService.addFunds = async (userId, goalId, fundAmount) => {
       throw new Error("Goal not found");
     }
 
-    const wasCompleted = goal.status === 'completed';
+    const wasCompleted = goal.status === "completed";
     goal.currentAmount += Number(fundAmount);
 
     if (goal.currentAmount >= goal.targetAmount) {
@@ -125,7 +125,7 @@ goalService.addFunds = async (userId, goalId, fundAmount) => {
 
     const updatedGoal = await goal.save();
 
-    if (!wasCompleted && updatedGoal.status === 'completed') {
+    if (!wasCompleted && updatedGoal.status === "completed") {
       await notificationService.createNotification(
         userId,
         "GOAL_ACHIEVED",

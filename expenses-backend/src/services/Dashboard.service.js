@@ -1,44 +1,44 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-const expenseModel = require("../models/Expense.model");
+const expenseModel = require("../models/Expense.model")
 
-const budgetModel = require("../models/Budget.model");
+const budgetModel = require("../models/Budget.model")
 
-const incomeModel = require("../models/Income.model");
+const incomeModel = require("../models/Income.model")
 
-const categoryModel = require("../models/Category.model");
+const categoryModel = require("../models/Category.model")
 
-const { getStartDateFromRange } = require("../utilities/dateRange");
+const { getStartDateFromRange } = require("../utilities/dateRange")
 
-let dashboardService = {};
+let dashboardService = {}
 
 const buildExpenseMatch = (userId, start, end, category) => {
   const match = {
     userId: new mongoose.Types.ObjectId(userId), // Cast to ObjectId for aggregation
     date: { $gte: start, $lte: end },
-  };
-
-  if (category && category !== "ALL") {
-    match.categoryName = category;
   }
 
-  return match;
-};
+  if (category && category !== "ALL") {
+    match.categoryName = category
+  }
+
+  return match
+}
 
 const getMonthlyExpenses = async (userId) => {
   try {
     // Last 6 months
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 5);
-    startDate.setDate(1);
-    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date()
+    const startDate = new Date()
+    startDate.setMonth(startDate.getMonth() - 5)
+    startDate.setDate(1)
+    startDate.setHours(0, 0, 0, 0)
 
-    const months = [];
+    const months = []
     for (let i = 0; i < 6; i++) {
-      const d = new Date(startDate);
-      d.setMonth(d.getMonth() + i);
-      months.push(d.toLocaleString("default", { month: "short" }));
+      const d = new Date(startDate)
+      d.setMonth(d.getMonth() + i)
+      months.push(d.toLocaleString("default", { month: "short" }))
     }
 
     const expenseAgg = await expenseModel.aggregate([
@@ -57,7 +57,7 @@ const getMonthlyExpenses = async (userId) => {
           total: { $sum: "$amount" }
         }
       }
-    ]);
+    ])
 
     const incomeAgg = await incomeModel.aggregate([
       {
@@ -75,39 +75,39 @@ const getMonthlyExpenses = async (userId) => {
           total: { $sum: "$amount" }
         }
       }
-    ]);
+    ])
 
     // Map aggregations to month names
     // Note: $month is 1-indexed (1=Jan)
 
     const result = months.map((monthName, index) => {
       // Reconstruct the date for this index to match aggregation
-      const d = new Date(startDate);
-      d.setMonth(d.getMonth() + index);
-      const m = d.getMonth() + 1;
-      const y = d.getFullYear();
+      const d = new Date(startDate)
+      d.setMonth(d.getMonth() + index)
+      const m = d.getMonth() + 1
+      const y = d.getFullYear()
 
-      const exp = expenseAgg.find(e => e._id.month === m && e._id.year === y);
-      const inc = incomeAgg.find(i => i._id.month === m && i._id.year === y);
+      const exp = expenseAgg.find(e => e._id.month === m && e._id.year === y)
+      const inc = incomeAgg.find(i => i._id.month === m && i._id.year === y)
 
       return {
         month: monthName,
         expenses: exp ? exp.total : 0,
         income: inc ? inc.total : 0
-      };
-    });
+      }
+    })
 
-    return result;
+    return result
 
   } catch (error) {
-    console.log("Dashboard Service getMonthlyExpenses() Error: ", error);
-    throw error;
+    console.log("Dashboard Service getMonthlyExpenses() Error: ", error)
+    throw error
   }
-};
+}
 
 const getSummary = async (userId, start, end, category) => {
   try {
-    const expenseMatch = buildExpenseMatch(userId, start, end, category);
+    const expenseMatch = buildExpenseMatch(userId, start, end, category)
 
     const expenseAgg = await expenseModel.aggregate([
       { $match: expenseMatch },
@@ -117,7 +117,7 @@ const getSummary = async (userId, start, end, category) => {
           totalExpenses: { $sum: "$amount" },
         },
       },
-    ]);
+    ])
 
     const incomeAgg = await incomeModel.aggregate([
       {
@@ -132,10 +132,10 @@ const getSummary = async (userId, start, end, category) => {
           totalIncomes: { $sum: "$amount" },
         },
       },
-    ]);
+    ])
 
-    const totalExpenses = expenseAgg[0]?.totalExpenses || 0;
-    const totalIncomes = incomeAgg[0]?.totalIncomes || 0;
+    const totalExpenses = expenseAgg[0]?.totalExpenses || 0
+    const totalIncomes = incomeAgg[0]?.totalIncomes || 0
 
     const budgetAgg = await budgetModel.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
@@ -145,22 +145,22 @@ const getSummary = async (userId, start, end, category) => {
           totalBudget: { $sum: "$budgetAmount" },
         },
       },
-    ]);
+    ])
 
-    const monthlyBudget = budgetAgg[0]?.totalBudget || 0;
-    const savings = totalIncomes - totalExpenses;
+    const monthlyBudget = budgetAgg[0]?.totalBudget || 0
+    const savings = totalIncomes - totalExpenses
 
     return {
       totalExpenses,
       totalIncomes,
       monthlyBudget,
       savings,
-    };
+    }
   } catch (error) {
-    console.log("Dashboard Service getSummaryMethod() Error: ", error);
-    throw error;
+    console.log("Dashboard Service getSummaryMethod() Error: ", error)
+    throw error
   }
-};
+}
 
 const getExpensesByCategory = async (userId, start, end) => {
   try {
@@ -184,69 +184,69 @@ const getExpensesByCategory = async (userId, start, end) => {
           amount: "$total",
         },
       },
-    ]);
+    ])
 
   } catch (error) {
-    console.log("Dashboard Service getExpensesByCategory() Error: ", error);
-    throw error;
+    console.log("Dashboard Service getExpensesByCategory() Error: ", error)
+    throw error
   }
-};
+}
 
 const getBudgetUsage = async (userId, start, end, category) => { // Params kept for signature but ignored for logic
   try {
     // ALWAYS Current Month for budgets
-    const now = new Date();
-    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const now = new Date()
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
 
-    const budgetQuery = { userId: userId };
+    const budgetQuery = { userId: userId }
     if (category && category !== "ALL") {
-      budgetQuery.categoryName = category;
+      budgetQuery.categoryName = category
     }
 
-    const budgets = await budgetModel.find(budgetQuery).lean();
+    const budgets = await budgetModel.find(budgetQuery).lean()
 
     const expenseQuery = {
       userId: userId,
       date: { $gte: currentMonthStart, $lte: currentMonthEnd },
-    };
+    }
     if (category && category !== "ALL") {
-      expenseQuery.categoryName = category;
+      expenseQuery.categoryName = category
     }
 
-    const expenses = await expenseModel.find(expenseQuery).lean();
+    const expenses = await expenseModel.find(expenseQuery).lean()
 
-    const spentMap = {};
+    const spentMap = {}
     for (const expense of expenses) {
-      const cat = expense.categoryName;
-      spentMap[cat] = (spentMap[cat] || 0) + expense.amount;
+      const cat = expense.categoryName
+      spentMap[cat] = (spentMap[cat] || 0) + expense.amount
     }
 
     return budgets.map((budget) => {
-      const spent = spentMap[budget.categoryName] || 0;
-      const limit = budget.budgetAmount;
+      const spent = spentMap[budget.categoryName] || 0
+      const limit = budget.budgetAmount
       return {
         category: budget.categoryName,
         spent,
         limit,
         usedPercentage: limit === 0 ? 0 : Math.round((spent / limit) * 100),
-      };
-    });
+      }
+    })
   } catch (error) {
-    console.log("Dashboard Service getBudgetUsage() method Error: ", error);
-    throw error;
+    console.log("Dashboard Service getBudgetUsage() method Error: ", error)
+    throw error
   }
-};
+}
 
 const getBudgetAlerts = async (userId, start, end, category) => {
-  const usage = await getBudgetUsage(userId, start, end, category);
-  return usage.filter((bgt) => bgt.usedPercentage >= 100).length;
-};
+  const usage = await getBudgetUsage(userId, start, end, category)
+  return usage.filter((bgt) => bgt.usedPercentage >= 100).length
+}
 
 const getRecentTransactions = async (userId, start, end, category) => {
   try {
-    const query = { userId: userId };
-    if (category && category !== "ALL") query.categoryName = category;
+    const query = { userId: userId }
+    if (category && category !== "ALL") query.categoryName = category
 
     const [expenses, incomes] = await Promise.all([
       expenseModel
@@ -276,40 +276,40 @@ const getRecentTransactions = async (userId, start, end, category) => {
         .sort({ date: -1 })
         .limit(20)
         .lean()
-    ]);
+    ])
 
-    const formattedExpenses = expenses.map(e => ({ ...e, type: 'expense' }));
+    const formattedExpenses = expenses.map(e => ({ ...e, type: 'expense' }))
     const formattedIncomes = incomes.map(i => ({
       ...i,
       type: 'income',
       merchant: i.source || "Income", // Map source to merchant-like field for table
       categoryName: i.category || "Income"
-    }));
+    }))
 
-    const combined = [...formattedExpenses, ...formattedIncomes].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const combined = [...formattedExpenses, ...formattedIncomes].sort((a, b) => new Date(b.date) - new Date(a.date))
 
-    return combined.slice(0, 20);
+    return combined.slice(0, 20)
   } catch (error) {
     console.log(
       "Dashboard Service getRecentTransactions() method Error: ",
       error
-    );
-    throw error;
+    )
+    throw error
   }
-};
+}
 
 const getCategories = async (userId) => {
   try {
-    return categoryModel.find({ userId: userId });
+    return categoryModel.find({ userId: userId })
   } catch (error) {
-    console.log("Dashboard Service getCategories() method Error: ", error);
-    throw error;
+    console.log("Dashboard Service getCategories() method Error: ", error)
+    throw error
   }
-};
+}
 
 dashboardService.fetchDashboardDetails = async (userId, range, category) => {
   try {
-    const { startDate: start, endDate: end } = getStartDateFromRange(range) || { startDate: new Date(0), endDate: new Date() };
+    const { startDate: start, endDate: end } = getStartDateFromRange(range) || { startDate: new Date(0), endDate: new Date() }
 
     const [
       summary,
@@ -327,7 +327,7 @@ dashboardService.fetchDashboardDetails = async (userId, range, category) => {
       getBudgetAlerts(userId, start, end, category),
       getCategories(userId),
       getMonthlyExpenses(userId)
-    ]);
+    ])
 
     return {
       summary: {
@@ -339,15 +339,15 @@ dashboardService.fetchDashboardDetails = async (userId, range, category) => {
       recentTransactions,
       categories,
       monthlyExpenses // Added to response
-    };
+    }
   } catch (error) {
     console.log(
       "Dashboard Service fetchDashboardDetails() method Error: ",
       error
-    );
+    )
 
-    throw error;
+    throw error
   }
-};
+}
 
-module.exports = dashboardService;
+module.exports = dashboardService

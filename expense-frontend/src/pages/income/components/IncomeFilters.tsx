@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { 
-  categoryStart, 
-  categoryFailure, 
-  categoryNamesSuccess 
-} from "../../../features/categories/categorySlice";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {
+  categoryStart,
+  categoryFailure,
+  categoryNamesSuccess,
+} from "../../../store/slices/category.slice";
 import api from "../../../services/axios";
 import { API_ENDPOINTS } from "../../../services/endpoints";
 
@@ -35,7 +35,11 @@ const IncomeFilters = ({ onFilterChange }: IncomeFiltersProps) => {
       const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("income"));
       dispatch(categoryNamesSuccess(response.data.data));
     } catch (error: any) {
-      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+      dispatch(
+        categoryFailure(
+          error.response?.data?.message || "Failed to fetch categories"
+        )
+      );
     }
   }, [dispatch]);
 
@@ -68,7 +72,10 @@ const IncomeFilters = ({ onFilterChange }: IncomeFiltersProps) => {
   return (
     <div className="row g-3 align-items-center">
       <div className="col-12 col-md-4">
-        <div className="input-group search-input-group border w-100" style={{ background: '#fff' }}>
+        <div
+          className="input-group search-input-group border w-100"
+          style={{ background: "#fff" }}
+        >
           <span className="input-group-text bg-transparent border-0 ps-3">
             <i className="bi bi-search text-muted small"></i>
           </span>

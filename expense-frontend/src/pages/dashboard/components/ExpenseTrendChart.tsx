@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 const ExpenseTrendChart = () => {
   const { monthlyExpenses } = useAppSelector((state) => state.dashboard);
@@ -21,14 +21,22 @@ const ExpenseTrendChart = () => {
             <div className="d-flex align-items-center gap-1">
               <span
                 className="rounded-circle"
-                style={{ width: '12px', height: '12px', backgroundColor: '#6366f1' }}
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: "#6366f1",
+                }}
               ></span>
               <small className="text-muted extra-small">Expenses</small>
             </div>
             <div className="d-flex align-items-center gap-1">
               <span
                 className="rounded-circle"
-                style={{ width: '12px', height: '12px', backgroundColor: '#22c55e' }}
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: "#22c55e",
+                }}
               ></span>
               <small className="text-muted extra-small">Income</small>
             </div>
@@ -36,7 +44,11 @@ const ExpenseTrendChart = () => {
         </div>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={monthlyExpenses}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="var(--border-color)"
+            />
             <XAxis
               dataKey="month"
               axisLine={false}
@@ -48,20 +60,22 @@ const ExpenseTrendChart = () => {
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: "var(--text-muted)" }}
-              tickFormatter={(value) => `₹${value >= 1000 ? (value / 1000).toFixed(0) + 'k' : value}`}
+              tickFormatter={(value) =>
+                `₹${value >= 1000 ? (value / 1000).toFixed(0) + "k" : value}`
+              }
             />
             <Tooltip
-              formatter={(v: any) => [`₹${v?.toLocaleString()}`, '']}
+              formatter={(v: any) => [`₹${v?.toLocaleString()}`, ""]}
               contentStyle={{
                 borderRadius: 12,
                 border: "1px solid var(--border-color)",
                 boxShadow: "var(--shadow-md)",
-                padding: '12px',
-                backgroundColor: 'var(--bg-card)',
-                color: 'var(--text-main)'
+                padding: "12px",
+                backgroundColor: "var(--bg-card)",
+                color: "var(--text-main)",
               }}
-              itemStyle={{ color: 'var(--text-main)' }}
-              labelStyle={{ color: 'var(--text-muted)' }}
+              itemStyle={{ color: "var(--text-main)" }}
+              labelStyle={{ color: "var(--text-muted)" }}
             />
             <Line
               type="monotone"
@@ -87,4 +101,3 @@ const ExpenseTrendChart = () => {
 };
 
 export default ExpenseTrendChart;
-

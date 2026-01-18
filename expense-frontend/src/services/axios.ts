@@ -1,6 +1,6 @@
 import axios from "axios";
-import { store } from "../app/store";
-import { logOut } from "../features/auth/authSlice";
+import { store } from "../store/store";
+import { logOut } from "../store/slices/auth.slice";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 

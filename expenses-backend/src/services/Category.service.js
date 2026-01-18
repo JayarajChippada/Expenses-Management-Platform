@@ -6,7 +6,9 @@ categoryService.addCategory = async (categoryObj) => {
   try {
     const category = await categoryService.fetchCategory(
       categoryObj.userId,
+
       categoryObj.categoryName,
+
       categoryObj.type
     );
 
@@ -32,10 +34,30 @@ categoryService.addCategory = async (categoryObj) => {
   }
 };
 
-categoryService.fetchCategoryNamesByUserId = async (userId, type) => { 
+categoryService.fetchCategoriesByUserId = async (userId) => {
+  try {
+    const categories = await categoryModel.find({ userId: userId });
+
+    if (categories.length > 0) {
+      return categories;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log(
+      "Category Service fetchCategoriesByUserId() method Error: ",
+      error
+    );
+
+    throw error;
+  }
+};
+
+categoryService.fetchCategoryNamesByUserId = async (userId, type) => {
   try {
     const categories = await categoryModel.find(
       { userId: userId, type: type },
+
       { _id: 0, categoryName: 1 }
     );
 
@@ -52,7 +74,7 @@ categoryService.fetchCategoryNamesByUserId = async (userId, type) => {
     }
   } catch (error) {
     console.log(
-      "Category Service fetchCategoriesByUserId() method Error: ",
+      "Category Service fetchCategoryNamesByUserId() method Error: ",
       error
     );
 
@@ -60,7 +82,7 @@ categoryService.fetchCategoryNamesByUserId = async (userId, type) => {
   }
 };
 
-categoryService.fetchCategoriesByUserId = async (userId, type) => {
+categoryService.fetchCategoriesByType = async (userId, type) => {
   try {
     const categories = await categoryModel.find({ userId: userId, type: type });
 
@@ -71,7 +93,8 @@ categoryService.fetchCategoriesByUserId = async (userId, type) => {
     }
   } catch (error) {
     console.log(
-      "Category Service fetchCategoriesByUserId() method Error: ",
+      "Category Service fetchCategoriesByType() method Error: ",
+
       error
     );
 
@@ -83,7 +106,9 @@ categoryService.fetchCategory = async (userId, categoryName, type) => {
   try {
     const category = await categoryModel.findOne({
       userId: userId,
+
       categoryName: categoryName,
+
       type: type,
     });
 
@@ -94,27 +119,30 @@ categoryService.fetchCategory = async (userId, categoryName, type) => {
     }
   } catch (error) {
     console.log("Category Service fetchCategory() method Error: ", error);
+
     throw error;
   }
 };
 
-categoryService.updateCategory = async (categoryName, categoryObj) => {
+categoryService.deleteCategory = async (categoryId) => {
   try {
-    // 1. Check if the category already exists for avoiding duplicate categories
+    const response = await categoryModel.deleteOne({ _id: categoryId });
 
-    const category = await categoryService.fetchCategory(
-      categoryObj.userId,
-      categoryName,
-      categoryObj.type
-    );
-
-    if (!category) {
-      let error = new Error("Category doesn't exists for this particular user");
-
-      error.status = 400;
-
-      throw error;
+    if (response.deletedCount > 0) {
+      return { message: "Category deleted Successfully" };
+    } else {
+      return null;
     }
+  } catch (error) {
+    console.log("Category Service deleteCategory() method Error: ", error);
+
+    throw error;
+  }
+};
+
+categoryService.updateCategory = async (categoryId, categoryObj) => {
+  try {
+    const category = await categoryModel.findOne({ _id: categoryId });
 
     if (categoryObj.categoryName)
       category.categoryName = categoryObj.categoryName;
@@ -126,8 +154,6 @@ categoryService.updateCategory = async (categoryName, categoryObj) => {
     if (categoryObj.type) category.type = categoryObj.type;
 
     if (categoryObj.keywords) category.keywords = categoryObj.keywords;
-
-    // 2. Else, Insert the category into the category collection
 
     const resObj = await category.save();
 

@@ -1,6 +1,6 @@
 import axios from "./axios";
 import { API_ENDPOINTS } from "./endpoints";
-import type { AppDispatch } from "../app/store";
+import type { AppDispatch } from "../store/store";
 import {
   notificationStart,
   notificationSuccess,
@@ -8,7 +8,7 @@ import {
   markAsReadSuccess,
   markAllReadSuccess,
   deleteNotificationSuccess,
-} from "../features/notifications/notificationSlice";
+} from "../store/slices/notification.slice";
 
 export const fetchNotifications = () => async (dispatch: AppDispatch) => {
   try {
@@ -18,7 +18,11 @@ export const fetchNotifications = () => async (dispatch: AppDispatch) => {
       dispatch(notificationSuccess(response.data.data));
     }
   } catch (error: any) {
-    dispatch(notificationFailure(error.response?.data?.message || "Failed to fetch notifications"));
+    dispatch(
+      notificationFailure(
+        error.response?.data?.message || "Failed to fetch notifications"
+      )
+    );
   }
 };
 
@@ -40,17 +44,20 @@ export const markAllAsRead = () => async (dispatch: AppDispatch) => {
       dispatch(markAllReadSuccess());
     }
   } catch (error: any) {
-     console.error("Failed to mark all as read", error);
+    console.error("Failed to mark all as read", error);
   }
 };
 
-export const deleteNotification = (id: string) => async (dispatch: AppDispatch) => {
-  try {
-    const response = await axios.delete(API_ENDPOINTS.NOTIFICATIONS.BY_ID(id));
-    if (response.data.success) {
-      dispatch(deleteNotificationSuccess(id));
+export const deleteNotification =
+  (id: string) => async (dispatch: AppDispatch) => {
+    try {
+      const response = await axios.delete(
+        API_ENDPOINTS.NOTIFICATIONS.BY_ID(id)
+      );
+      if (response.data.success) {
+        dispatch(deleteNotificationSuccess(id));
+      }
+    } catch (error: any) {
+      console.error("Failed to delete notification", error);
     }
-  } catch (error: any) {
-    console.error("Failed to delete notification", error);
-  }
-};
+  };

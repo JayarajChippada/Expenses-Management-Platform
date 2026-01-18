@@ -10,6 +10,8 @@ expenseRouter.post("/", verifyToken, expenseController.addExpense);
 
 expenseRouter.post("/import", verifyToken, expenseController.importExpenses);
 
+expenseRouter.get("/export", verifyToken, expenseController.exportExpenses);
+
 expenseRouter.get("/", verifyToken, expenseController.fetchExpensesByUserId);
 
 expenseRouter.get(

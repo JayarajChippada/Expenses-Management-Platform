@@ -4,9 +4,10 @@ export const API_ENDPOINTS = {
     REGISTER: "/auth/sign-up",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: (token: string) => `/auth/reset-password/${token}`,
+    CHANGE_PASSWORD: "/auth/change-password",
     REFRESH: "/auth/refresh",
   },
-  EXPENSES: { 
+  EXPENSES: {
     BASE: "/expenses",
     BY_ID: (id: string) => `/expenses/${id}`,
     STATS: "/expenses/stats",
@@ -14,6 +15,7 @@ export const API_ENDPOINTS = {
     SEARCH: "/expenses/search",
     BY_DATE: "/expenses/date",
     BY_CATEGORY: (category: string) => `/expenses/category/${category}`,
+    EXPORT: "/expenses/export",
   },
   INCOME: {
     BASE: "/income",

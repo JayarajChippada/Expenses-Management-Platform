@@ -9,10 +9,7 @@ const User = require("../models/classes/User");
 let userController = {};
 
 userController.updateUser = async (req, res, next) => {
-  const {
-    fullName,
-    email,
-  } = req.body;
+  const { fullName, email } = req.body;
 
   try {
     const userId = req.user.userId;
@@ -28,7 +25,11 @@ userController.updateUser = async (req, res, next) => {
     if (resObj !== null) {
       res
         .status(200)
-        .json({ success: true, message: "User updated successfully", data: resObj });
+        .json({
+          success: true,
+          message: "User updated successfully",
+          data: resObj,
+        });
     } else {
       let error = new Error("User updation Failed!");
 

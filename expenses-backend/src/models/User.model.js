@@ -64,8 +64,7 @@ const userSchema = Schema(
 
     passwordResetTokenExpiresAt: Date,
   },
-  { timestamps: true },
-  { collection: "Users" }
+  { timestamps: true, collection: "Users" }
 );
 
 userSchema.methods.createResetToken = async function () {

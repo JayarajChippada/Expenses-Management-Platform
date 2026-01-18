@@ -11,18 +11,22 @@ const SummaryCard = ({ metric }: Props) => {
         <div className="d-flex justify-content-between align-items-start">
           <div>
             <p className="text-muted small mb-1">{metric.title}</p>
-            <h4 className="fw-bold mb-0" style={{ color: metric.color || 'inherit' }}>
+            <h4
+              className="fw-bold mb-0"
+              style={{ color: metric.color || "inherit" }}
+            >
               {metric.value}
             </h4>
             {metric.trend !== undefined && (
               <div className="d-flex align-items-center gap-1 mt-2">
                 <span
                   className="small fw-semibold"
-                  style={{ color: metric.positive ? '#22c55e' : '#ef4444' }}
+                  style={{ color: metric.positive ? "#22c55e" : "#ef4444" }}
                 >
-                  {metric.positive ? '+' : '-'}{metric.trend}%
+                  {metric.positive ? "+" : "-"}
+                  {metric.trend}%
                 </span>
-                <span className="text-muted" style={{ fontSize: '12px' }}>
+                <span className="text-muted" style={{ fontSize: "12px" }}>
                   vs last month
                 </span>
               </div>
@@ -32,8 +36,8 @@ const SummaryCard = ({ metric }: Props) => {
             <div
               className="d-flex align-items-center justify-content-center rounded-3 shadow-sm"
               style={{
-                width: '44px',
-                height: '44px',
+                width: "44px",
+                height: "44px",
                 backgroundColor: `${metric.color}15`,
                 color: metric.color,
               }}

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { authStart, authSuccess, authFailure } from "../../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  authStart,
+  authSuccess,
+  authFailure,
+} from "../../store/slices/auth.slice";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
 import { validateEmail } from "../../utils/validation";
@@ -10,12 +14,12 @@ type FormData = {
   email: string;
   password: string;
   rememberMe: boolean;
-}
+};
 
 type FormErrors = {
   email: string;
-  password: string
-}
+  password: string;
+};
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -30,43 +34,45 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: "",
-    password: ""
+    password: "",
   });
-  const [errorMessage, setErrorMessage] = useState<string>("")
-  const [successMessage, setSuccessMessage] = useState<string>("")
-  const [mandatory, setMandatory] = useState<boolean> (true)
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [mandatory, setMandatory] = useState<boolean>(true);
 
   const validateFields = (fieldName: string, fieldValue: string) => {
-    let errors: FormErrors = {...formErrors}
-    switch(fieldName) {
+    let errors: FormErrors = { ...formErrors };
+    switch (fieldName) {
       case "email": {
         errors.email = validateEmail(fieldValue) || "";
         break;
       }
       case "password": {
-        if(!fieldValue) {
-          errors.password = "Password is required"
-        }
-        else {
-          errors.password = ""
+        if (!fieldValue) {
+          errors.password = "Password is required";
+        } else {
+          errors.password = "";
         }
         break;
       }
     }
-    setFormErrors(errors)
-    const allFieldsFilled = Object.values(formData).every((val) => val !== "")
-    setMandatory(!allFieldsFilled)
-  }
+    setFormErrors(errors);
+    const allFieldsFilled = Object.values(formData).every((val) => val !== "");
+    setMandatory(!allFieldsFilled);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
-    setFormData({...formData, [name]: name === "rememberMe" ? checked : value})
-    validateFields(name, value)
+    setFormData({
+      ...formData,
+      [name]: name === "rememberMe" ? checked : value,
+    });
+    validateFields(name, value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isFormValid = Object.values(formErrors).every((val) => val === "")
+    const isFormValid = Object.values(formErrors).every((val) => val === "");
     if (!isFormValid) return;
 
     dispatch(authStart());
@@ -76,23 +82,27 @@ const Login = () => {
         password: formData.password,
       });
       dispatch(authSuccess(response.data));
-      setSuccessMessage("Login successful! Redirecting to Dashboard in 3 secs...")
+      setSuccessMessage("Login successful!");
       setFormData({
         email: "",
         password: "",
-        rememberMe: false
-      })
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 3000)
+        rememberMe: false,
+      });
+      navigate("/dashboard");
     } catch (err: any) {
-      dispatch(authFailure(err.response?.data?.message || "Login failed. Please try again."));
-      setErrorMessage(err.response?.data?.message || "Login failed. Please try again.")
+      dispatch(
+        authFailure(
+          err.response?.data?.message || "Login failed. Please try again."
+        )
+      );
+      setErrorMessage(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
       setFormData({
         email: "",
         password: "",
-        rememberMe: false
-      })
+        rememberMe: false,
+      });
     }
   };
 
@@ -105,12 +115,19 @@ const Login = () => {
               <div className="card-body p-4 p-md-5">
                 {/* Logo */}
                 <div className="text-center mb-4">
-                  <i className="bi bi-wallet2 text-primary-custom" style={{ fontSize: '48px' }}></i>
-                  <h4 className="mt-2 fw-bold text-primary-custom">ExpenseManager</h4>
+                  <i
+                    className="bi bi-wallet2 text-primary-custom"
+                    style={{ fontSize: "48px" }}
+                  ></i>
+                  <h4 className="mt-2 fw-bold text-primary-custom">
+                    ExpenseManager
+                  </h4>
                 </div>
 
                 <h5 className="text-center fw-bold mb-1">Welcome Back</h5>
-                <p className="text-center text-muted mb-4">Sign in to continue to your dashboard</p>
+                <p className="text-center text-muted mb-4">
+                  Sign in to continue to your dashboard
+                </p>
 
                 {errorMessage && (
                   <div className="alert alert-danger py-2" role="alert">
@@ -125,10 +142,14 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <label htmlFor="email" className="form-label">
+                      Email Address
+                    </label>
                     <input
                       type="email"
-                      className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                      className={`form-control ${
+                        formErrors.email ? "is-invalid" : ""
+                      }`}
                       id="email"
                       name="email"
                       value={formData.email}
@@ -142,11 +163,15 @@ const Login = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
+                    <label htmlFor="password" className="form-label">
+                      Password
+                    </label>
                     <div className="input-group">
                       <input
                         type={showPassword ? "text" : "password"}
-                        className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          formErrors.password ? "is-invalid" : ""
+                        }`}
                         id="password"
                         name="password"
                         value={formData.password}
@@ -159,10 +184,16 @@ const Login = () => {
                         className="btn btn-outline-secondary"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                        <i
+                          className={`bi ${
+                            showPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
                       </button>
                       {formErrors.password && (
-                        <div className="invalid-feedback">{formErrors.password}</div>
+                        <div className="invalid-feedback">
+                          {formErrors.password}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -177,11 +208,17 @@ const Login = () => {
                         checked={formData.rememberMe}
                         onChange={handleChange}
                       />
-                      <label className="form-check-label small" htmlFor="rememberMe">
+                      <label
+                        className="form-check-label small"
+                        htmlFor="rememberMe"
+                      >
                         Remember me
                       </label>
                     </div>
-                    <Link to="/forgot-password" className="link-primary-custom small">
+                    <Link
+                      to="/forgot-password"
+                      className="link-primary-custom small"
+                    >
                       Forgot Password?
                     </Link>
                   </div>
@@ -192,7 +229,10 @@ const Login = () => {
                     disabled={mandatory || loading}
                   >
                     {loading ? (
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      ></span>
                     ) : null}
                     Sign In
                   </button>
@@ -200,7 +240,10 @@ const Login = () => {
 
                 <p className="text-center mt-4 mb-0">
                   Don't have an account?{" "}
-                  <Link to="/register" className="link-primary-custom fw-semibold">
+                  <Link
+                    to="/register"
+                    className="link-primary-custom fw-semibold"
+                  >
                     Sign Up
                   </Link>
                 </p>

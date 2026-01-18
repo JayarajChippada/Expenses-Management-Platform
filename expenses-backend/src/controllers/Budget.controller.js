@@ -62,7 +62,11 @@ budgetController.addBudget = async (req, res, next) => {
     if (resObj !== null) {
       res
         .status(201)
-        .json({ success: true, message: "Budget set Successfully", data: resObj });
+        .json({
+          success: true,
+          message: "Budget set Successfully",
+          data: resObj,
+        });
     } else {
       let error = new Error("Adding Budget failed!");
 
@@ -146,7 +150,11 @@ budgetController.updateBudget = async (req, res, next) => {
 
     const budgetId = req.params.budgetId;
     if (req.body.categoryName)
-      await Validator.validateCategory(userId, req.body.categoryName, "expense");
+      await Validator.validateCategory(
+        userId,
+        req.body.categoryName,
+        "expense"
+      );
 
     const start = new Date(req.body.period.start);
 

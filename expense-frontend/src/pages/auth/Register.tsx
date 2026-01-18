@@ -2,21 +2,25 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/axios";
 import { API_ENDPOINTS } from "../../services/endpoints";
-import { validateEmail, validatePassword, validateName } from "../../utils/validation";
+import {
+  validateEmail,
+  validatePassword,
+  validateName,
+} from "../../utils/validation";
 
 type FormData = {
   fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
-}
+};
 
 type FormErrors = {
   fullName: string;
   email: string;
   password: string;
-  confirmPassword: string
-}
+  confirmPassword: string;
+};
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,20 +35,18 @@ const Register = () => {
     fullName: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>("")
-  const [successMessage, setSuccessMessage] = useState<string>("")
-  const [loading, setLoading] = useState<boolean> (false)
-  const [mandatory, setMandatory] = useState<boolean> (true)
-
-
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [mandatory, setMandatory] = useState<boolean>(true);
 
   const validateFields = (fieldName: string, fieldValue: string) => {
-    let errors: FormErrors = {...formErrors}
-    switch(fieldName) {
+    let errors: FormErrors = { ...formErrors };
+    switch (fieldName) {
       case "fullName": {
         errors.fullName = validateName(fieldValue) || "";
         break;
@@ -62,55 +64,56 @@ const Register = () => {
           errors.confirmPassword = "Please confirm your password";
         } else if (formData.password !== fieldValue) {
           errors.confirmPassword = "Passwords do not match";
-        }
-        else {
-          errors.confirmPassword = ""
+        } else {
+          errors.confirmPassword = "";
         }
         break;
       }
     }
-    setFormErrors(errors)
-    const allFieldsFilled = Object.values(formData).every((val) => val !== "")
-    setMandatory(!allFieldsFilled)
-  }
+    setFormErrors(errors);
+    const allFieldsFilled = Object.values(formData).every((val) => val !== "");
+    setMandatory(!allFieldsFilled);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({...formData, [name]: value})
-    validateFields(name, value)
+    setFormData({ ...formData, [name]: value });
+    validateFields(name, value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isFormValid = Object.values(formErrors).every((val) => val === "")
+    const isFormValid = Object.values(formErrors).every((val) => val === "");
     if (!isFormValid) return;
     try {
-      setLoading(true)
+      setLoading(true);
       await api.post(API_ENDPOINTS.AUTH.REGISTER, {
         fullName: formData.fullName,
-        email: formData.email, 
+        email: formData.email,
         password: formData.password,
       });
-      setLoading(false)
-      setSuccessMessage("Registration successful! Redirecting to Login Page in 3 secs...")
+      setLoading(false);
+      setSuccessMessage(
+        "Registration successful! Redirecting to Login Page in 3 secs..."
+      );
       setFormData({
         fullName: "",
         email: "",
         password: "",
-        confirmPassword: ""
-      })
+        confirmPassword: "",
+      });
       setTimeout(() => {
         navigate("/login");
-      }, 3000)
+      }, 3000);
     } catch (err: any) {
-      setLoading(false)
-      setErrorMessage("Registration failed. Please try again.")
+      setLoading(false);
+      setErrorMessage("Registration failed. Please try again.");
       setFormData({
         fullName: "",
         email: "",
         password: "",
-        confirmPassword: ""
-      })
+        confirmPassword: "",
+      });
     }
   };
 
@@ -123,12 +126,19 @@ const Register = () => {
               <div className="card-body p-4 p-md-5">
                 {/* Logo */}
                 <div className="text-center mb-4">
-                  <i className="bi bi-wallet2 text-primary-custom" style={{ fontSize: '48px' }}></i>
-                  <h4 className="mt-2 fw-bold text-primary-custom">ExpenseManager</h4>
+                  <i
+                    className="bi bi-wallet2 text-primary-custom"
+                    style={{ fontSize: "48px" }}
+                  ></i>
+                  <h4 className="mt-2 fw-bold text-primary-custom">
+                    ExpenseManager
+                  </h4>
                 </div>
 
                 <h5 className="text-center fw-bold mb-1">Create Account</h5>
-                <p className="text-center text-muted mb-4">Sign up to start managing your expenses</p>
+                <p className="text-center text-muted mb-4">
+                  Sign up to start managing your expenses
+                </p>
 
                 {errorMessage && (
                   <div className="alert alert-danger py-2" role="alert">
@@ -143,10 +153,14 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="fullName" className="form-label">Full Name</label>
+                    <label htmlFor="fullName" className="form-label">
+                      Full Name
+                    </label>
                     <input
                       type="text"
-                      className={`form-control ${formErrors.fullName ? 'is-invalid' : ''}`}
+                      className={`form-control ${
+                        formErrors.fullName ? "is-invalid" : ""
+                      }`}
                       id="fullName"
                       name="fullName"
                       value={formData.fullName}
@@ -155,15 +169,21 @@ const Register = () => {
                       autoComplete="name"
                     />
                     {formErrors.fullName && (
-                      <div className="invalid-feedback">{formErrors.fullName}</div>
+                      <div className="invalid-feedback">
+                        {formErrors.fullName}
+                      </div>
                     )}
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <label htmlFor="email" className="form-label">
+                      Email Address
+                    </label>
                     <input
                       type="email"
-                      className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
+                      className={`form-control ${
+                        formErrors.email ? "is-invalid" : ""
+                      }`}
                       id="email"
                       name="email"
                       value={formData.email}
@@ -177,11 +197,15 @@ const Register = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
+                    <label htmlFor="password" className="form-label">
+                      Password
+                    </label>
                     <div className="input-group">
                       <input
                         type={showPassword ? "text" : "password"}
-                        className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          formErrors.password ? "is-invalid" : ""
+                        }`}
                         id="password"
                         name="password"
                         value={formData.password}
@@ -194,20 +218,30 @@ const Register = () => {
                         className="btn btn-outline-secondary"
                         onClick={() => setShowPassword(!showPassword)}
                       >
-                        <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                        <i
+                          className={`bi ${
+                            showPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
                       </button>
                       {formErrors.password && (
-                        <div className="invalid-feedback">{formErrors.password}</div>
+                        <div className="invalid-feedback">
+                          {formErrors.password}
+                        </div>
                       )}
                     </div>
                   </div>
 
                   <div className="mb-4">
-                    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                    <label htmlFor="confirmPassword" className="form-label">
+                      Confirm Password
+                    </label>
                     <div className="input-group">
                       <input
                         type={showConfirmPassword ? "text" : "password"}
-                        className={`form-control ${formErrors.confirmPassword ? 'is-invalid' : ''}`}
+                        className={`form-control ${
+                          formErrors.confirmPassword ? "is-invalid" : ""
+                        }`}
                         id="confirmPassword"
                         name="confirmPassword"
                         value={formData.confirmPassword}
@@ -218,12 +252,20 @@ const Register = () => {
                       <button
                         type="button"
                         className="btn btn-outline-secondary"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
                       >
-                        <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                        <i
+                          className={`bi ${
+                            showConfirmPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
                       </button>
                       {formErrors.confirmPassword && (
-                        <div className="invalid-feedback">{formErrors.confirmPassword}</div>
+                        <div className="invalid-feedback">
+                          {formErrors.confirmPassword}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -234,7 +276,10 @@ const Register = () => {
                     disabled={mandatory || loading}
                   >
                     {loading ? (
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      ></span>
                     ) : null}
                     Create Account
                   </button>

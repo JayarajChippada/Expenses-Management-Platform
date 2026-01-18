@@ -3,7 +3,7 @@ export interface SummaryMetric {
   value: string;
   trend?: number;
   positive?: boolean;
-  icon?: string;  // Bootstrap icon class name
+  icon?: string; // Bootstrap icon class name
   color?: string;
 }
 

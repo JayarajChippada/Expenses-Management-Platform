@@ -9,6 +9,12 @@ const categoryRouter = express.Router();
 categoryRouter.post("/", verifyToken, categoryController.addCategory);
 
 categoryRouter.get(
+  "/",
+  verifyToken,
+  categoryController.fetchCategoriesByUserId
+);
+
+categoryRouter.get(
   "/names/:type",
   verifyToken,
   categoryController.fetchCategoryNamesByUserId
@@ -17,7 +23,7 @@ categoryRouter.get(
 categoryRouter.get(
   "/:type",
   verifyToken,
-  categoryController.fetchCategoriesByUserId
+  categoryController.fetchCategoriesByType
 );
 
 categoryRouter.get(
@@ -27,9 +33,15 @@ categoryRouter.get(
 );
 
 categoryRouter.patch(
-  "/:categoryName",
+  "/:categoryId",
   verifyToken,
   categoryController.updateCategory
+);
+
+categoryRouter.delete(
+  "/:categoryId",
+  verifyToken,
+  categoryController.deleteCategory
 );
 
 module.exports = categoryRouter;

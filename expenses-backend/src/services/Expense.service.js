@@ -4,7 +4,12 @@ const categoryService = require("./Category.service");
 const notificationService = require("./Notification.service");
 
 // Helper to update budget usage with notifications
-const updateBudgetUsage = async (userId, categoryName, expenseDate, amountChange) => {
+const updateBudgetUsage = async (
+  userId,
+  categoryName,
+  expenseDate,
+  amountChange
+) => {
   try {
     const date = new Date(expenseDate);
     // Find active budgets that cover this date and category
@@ -22,7 +27,10 @@ const updateBudgetUsage = async (userId, categoryName, expenseDate, amountChange
       // Notifications only if spending increases
       if (amountChange > 0) {
         // Check Exceeded
-        if (oldAmountSpent <= budget.budgetAmount && budget.amountSpent > budget.budgetAmount) {
+        if (
+          oldAmountSpent <= budget.budgetAmount &&
+          budget.amountSpent > budget.budgetAmount
+        ) {
           await notificationService.createNotification(
             userId,
             "BUDGET_EXCEEDED",
@@ -31,8 +39,13 @@ const updateBudgetUsage = async (userId, categoryName, expenseDate, amountChange
           );
         }
         // Check Warning (only if not already exceeded)
-        const warningLimit = budget.budgetAmount * (budget.alertThreshold / 100);
-        if (oldAmountSpent < warningLimit && budget.amountSpent >= warningLimit && budget.amountSpent <= budget.budgetAmount) {
+        const warningLimit =
+          budget.budgetAmount * (budget.alertThreshold / 100);
+        if (
+          oldAmountSpent < warningLimit &&
+          budget.amountSpent >= warningLimit &&
+          budget.amountSpent <= budget.budgetAmount
+        ) {
           await notificationService.createNotification(
             userId,
             "BUDGET_WARNING",
@@ -45,7 +58,7 @@ const updateBudgetUsage = async (userId, categoryName, expenseDate, amountChange
     }
   } catch (error) {
     console.error("Error updating budget usage:", error);
-    // Don't throw here, we don't want to fail the expense operation just because budget update failed? 
+    // Don't throw here, we don't want to fail the expense operation just because budget update failed?
     // Ideally we should transaction, but let's keep it simple as requested.
   }
 };
@@ -104,7 +117,12 @@ expenseService.fetchExpensesByUserId = async (userId, page = 1, limit = 10) => {
   }
 };
 
-expenseService.fetchExpensesByCategory = async (userId, categoryName, page = 1, limit = 10) => {
+expenseService.fetchExpensesByCategory = async (
+  userId,
+  categoryName,
+  page = 1,
+  limit = 10
+) => {
   try {
     const expenses = await expenseModel
       .find({ userId: userId, categoryName: categoryName })
@@ -114,7 +132,7 @@ expenseService.fetchExpensesByCategory = async (userId, categoryName, page = 1, 
 
     const total = await expenseModel.countDocuments({
       userId: userId,
-      categoryName: categoryName
+      categoryName: categoryName,
     });
 
     return {
@@ -127,12 +145,21 @@ expenseService.fetchExpensesByCategory = async (userId, categoryName, page = 1, 
       },
     };
   } catch (error) {
-    console.log("Expense Service fetchExpensesByCategory() method Error: ", error);
+    console.log(
+      "Expense Service fetchExpensesByCategory() method Error: ",
+      error
+    );
     throw error;
   }
 };
 
-expenseService.fetchExpensesByDate = async (userId, startDate, endDate, page = 1, limit = 10) => {
+expenseService.fetchExpensesByDate = async (
+  userId,
+  startDate,
+  endDate,
+  page = 1,
+  limit = 10
+) => {
   try {
     const expenses = await expenseModel
       .find({ userId: userId, date: { $gte: startDate, $lte: endDate } })
@@ -142,7 +169,7 @@ expenseService.fetchExpensesByDate = async (userId, startDate, endDate, page = 1
 
     const total = await expenseModel.countDocuments({
       userId: userId,
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
     });
 
     return {
@@ -160,7 +187,12 @@ expenseService.fetchExpensesByDate = async (userId, startDate, endDate, page = 1
   }
 };
 
-expenseService.fetchExpensesBySearch = async (userId, search, page = 1, limit = 10) => {
+expenseService.fetchExpensesBySearch = async (
+  userId,
+  search,
+  page = 1,
+  limit = 10
+) => {
   try {
     const orConditions = [];
     orConditions.push({ merchant: { $regex: search, $options: "i" } });
@@ -173,7 +205,8 @@ expenseService.fetchExpensesBySearch = async (userId, search, page = 1, limit = 
 
     const query = { userId: userId, $or: orConditions };
 
-    const expenses = await expenseModel.find(query)
+    const expenses = await expenseModel
+      .find(query)
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
@@ -190,7 +223,10 @@ expenseService.fetchExpensesBySearch = async (userId, search, page = 1, limit = 
       },
     };
   } catch (error) {
-    console.log("Expense Service fetchExpensesBySearch() method Error: ", error);
+    console.log(
+      "Expense Service fetchExpensesBySearch() method Error: ",
+      error
+    );
     throw error;
   }
 };
@@ -222,12 +258,7 @@ expenseService.updateExpense = async (expenseId, expenseObj) => {
 
     if (resObj) {
       // Revert old budget usage
-      await updateBudgetUsage(
-        resObj.userId,
-        oldCategory,
-        oldDate,
-        -oldAmount
-      );
+      await updateBudgetUsage(resObj.userId, oldCategory, oldDate, -oldAmount);
 
       // Apply new budget usage
       await updateBudgetUsage(
@@ -250,7 +281,6 @@ expenseService.updateExpense = async (expenseId, expenseObj) => {
 
 expenseService.deleteExpense = async (userId, expenseId) => {
   try {
-
     const expenseObj = await expenseModel.findOne({ _id: expenseId });
 
     const amount = expenseObj.amount;
@@ -282,7 +312,11 @@ expenseService.importExpenses = async (userId, expenses) => {
       if (!exp.categoryName || !exp.amount || !exp.date) continue;
 
       // 1. Check/Create Category
-      let category = await categoryService.fetchCategory(userId, exp.categoryName, "expense");
+      let category = await categoryService.fetchCategory(
+        userId,
+        exp.categoryName,
+        "expense"
+      );
 
       if (!category) {
         // Create new category
@@ -291,10 +325,10 @@ expenseService.importExpenses = async (userId, expenses) => {
           categoryName: exp.categoryName,
           type: "expense",
           color: "#6b7280", // default color
-          icon: "bi-tag-fill" // default icon
+          icon: "bi-tag-fill", // default icon
         };
         // We bypass addCategory check because we just checked fetchCategory returns null
-        // But categoryService.addCategory throws if exists? 
+        // But categoryService.addCategory throws if exists?
         // Let's rely on addCategory's internal check or try/catch just in case of race condition
         try {
           await categoryService.addCategory(newCatObj);
@@ -312,19 +346,39 @@ expenseService.importExpenses = async (userId, expenses) => {
         date: exp.date,
         merchant: exp.merchant || "",
         paymentMethod: exp.paymentMethod || "Cash",
-        notes: exp.notes || ""
+        notes: exp.notes || "",
       };
 
       const newExpense = await expenseModel.create(expenseObj);
       importedExpenses.push(newExpense);
 
       // 3. Update Budget
-      await updateBudgetUsage(userId, newExpense.categoryName, newExpense.date, newExpense.amount);
+      await updateBudgetUsage(
+        userId,
+        newExpense.categoryName,
+        newExpense.date,
+        newExpense.amount
+      );
     }
     return importedExpenses;
-
   } catch (error) {
     console.log("Expense Service importExpenses() method Error: ", error);
+    throw error;
+  }
+};
+
+expenseService.fetchAllExpensesByUserId = async (userId) => {
+  try {
+    const expenses = await expenseModel
+      .find({ userId: userId })
+      .sort({ date: -1 });
+
+    return expenses;
+  } catch (error) {
+    console.log(
+      "Expense Service fetchAllExpensesByUserId() method Error: ",
+      error
+    );
     throw error;
   }
 };

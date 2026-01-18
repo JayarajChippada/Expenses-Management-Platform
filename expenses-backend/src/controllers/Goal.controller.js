@@ -46,7 +46,11 @@ goalController.addGoal = async (req, res, next) => {
     if (resObj !== null) {
       res
         .status(201)
-        .json({ success: true, message: "Financial Goal set Successfully", data: resObj });
+        .json({
+          success: true,
+          message: "Financial Goal set Successfully",
+          data: resObj,
+        });
     } else {
       let error = new Error("Adding Goal failed!");
 
@@ -127,7 +131,13 @@ goalController.addFunds = async (req, res, next) => {
     const resObj = await goalService.addFunds(userId, goalId, fundAmount);
 
     if (resObj !== null) {
-      res.status(200).json({ success: true, message: "Funds added successfully", data: resObj });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Funds added successfully",
+          data: resObj,
+        });
     } else {
       let error = new Error("Fund Updation Failed!");
 

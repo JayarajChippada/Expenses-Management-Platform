@@ -40,7 +40,8 @@ userService.updateUser = async (userId, userObj) => {
     const resObj = await userDetails.save();
 
     if (resObj) {
-      return { message: "User details updated Successfully!" };
+      const { password, ...userData } = resObj._doc;
+      return userData;
     } else {
       return null;
     }

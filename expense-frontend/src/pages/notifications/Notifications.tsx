@@ -1,57 +1,58 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import {
   fetchNotifications,
   markAllAsRead,
   markAsRead,
   deleteNotification,
-} from "../../services/notification.service";
-
+} from "../../services/notification.service"
 
 const Notifications = () => {
-  const dispatch = useAppDispatch();
-  const { list, loading } = useAppSelector((state) => state.notifications);
-  const [filter, setFilter] = useState<"all" | "read" | "unread">("all");
+  const dispatch = useAppDispatch()
+  const { list, loading } = useAppSelector((state) => state.notifications)
+  const [filter, setFilter] = useState<"all" | "read" | "unread">("all")
 
   useEffect(() => {
-    dispatch(fetchNotifications());
-  }, [dispatch]);
+    dispatch(fetchNotifications())
+  }, [dispatch])
 
   const filteredList = list.filter((n) => {
-    if (filter === "read") return n.isRead;
-    if (filter === "unread") return !n.isRead;
-    return true;
-  });
+    if (filter === "read") return n.isRead
+    if (filter === "unread") return !n.isRead
+    return true
+  })
 
   const handleMarkAllRead = () => {
-    dispatch(markAllAsRead());
-  };
+    dispatch(markAllAsRead())
+  }
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation()
     if (window.confirm("Delete this notification?")) {
-      dispatch(deleteNotification(id));
+      dispatch(deleteNotification(id))
     }
-  };
+  }
 
   const handleClick = (id: string, isRead: boolean) => {
     if (!isRead) {
-      dispatch(markAsRead(id));
+      dispatch(markAsRead(id))
     }
-  };
+  }
 
   const getIcon = (title: string) => {
-    if (title.includes("GOAL")) return "bi-trophy-fill text-warning";
-    if (title.includes("BUDGET")) return "bi-wallet-fill text-danger";
-    return "bi-bell-fill text-primary";
-  };
+    if (title.includes("GOAL")) return "bi-trophy-fill text-warning"
+    if (title.includes("BUDGET")) return "bi-wallet-fill text-danger"
+    return "bi-bell-fill text-primary"
+  }
 
   return (
     <div className="container-fluid py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h4 className="fw-bold mb-1">Notifications</h4>
-          <p className="text-muted small mb-0">Manage your alerts and updates</p>
+          <p className="text-muted small mb-0">
+            Manage your alerts and updates
+          </p>
         </div>
         {list.some((n) => !n.isRead) && (
           <button
@@ -80,7 +81,7 @@ const Notifications = () => {
                   }`}
                   onClick={() => setFilter(tab.id as any)}
                 >
-                    {tab.label}
+                  {tab.label}
                 </button>
               </li>
             ))}
@@ -110,35 +111,51 @@ const Notifications = () => {
                     !notification.isRead ? "bg-light-subtle" : ""
                   }`}
                   role="button"
-                  onClick={() => handleClick(notification._id, notification.isRead)}
+                  onClick={() =>
+                    handleClick(notification._id, notification.isRead)
+                  }
                 >
                   <div className="d-flex gap-3">
                     <div className="flex-shrink-0 mt-1">
-                      <div className="rounded-circle bg-light d-flex align-items-center justify-content-center" style={{width: 40, height: 40}}>
-                        <i className={`bi ${getIcon(notification.title)} fs-5`}></i>
+                      <div
+                        className="rounded-circle bg-light d-flex align-items-center justify-content-center"
+                        style={{ width: 40, height: 40 }}
+                      >
+                        <i
+                          className={`bi ${getIcon(notification.title)} fs-5`}
+                        ></i>
                       </div>
                     </div>
                     <div className="flex-grow-1">
                       <div className="d-flex justify-content-between align-items-start mb-1">
-                        <h6 className={`mb-0 ${!notification.isRead ? "fw-bold" : ""}`}>
+                        <h6
+                          className={`mb-0 ${
+                            !notification.isRead ? "fw-bold" : ""
+                          }`}
+                        >
                           {notification.message}
                         </h6>
                         <small className="text-muted ms-2 text-nowrap">
-                          {new Date(notification.createdAt).toLocaleDateString()}
+                          {new Date(
+                            notification.createdAt
+                          ).toLocaleDateString()}
                         </small>
                       </div>
-                      <p className="mb-1 small text-muted text-uppercase fw-bold" style={{fontSize: '0.75rem'}}>
+                      <p
+                        className="mb-1 small text-muted text-uppercase fw-bold"
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         {notification.title.replace(/_/g, " ")}
                       </p>
                     </div>
                     <div className="flex-shrink-0 ms-2">
-                        <button 
-                            className="btn btn-outline-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" 
-                            style={{width: 32, height: 32}}
-                            onClick={(e) => handleDelete(notification._id, e)}
-                        >
-                            <i className="bi bi-trash"></i>
-                        </button>
+                      <button
+                        className="btn btn-outline-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center"
+                        style={{ width: 32, height: 32 }}
+                        onClick={(e) => handleDelete(notification._id, e)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -148,7 +165,7 @@ const Notifications = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Notifications;
+export default Notifications

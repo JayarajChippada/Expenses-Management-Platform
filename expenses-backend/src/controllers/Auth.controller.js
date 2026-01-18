@@ -44,7 +44,9 @@ authController.signUp = async (req, res, next) => {
     const resObj = await authService.signUp(userObj);
 
     if (resObj !== null) {
-      res.status(200).json({ success: true, message: "User registered successfully" });
+      res
+        .status(200)
+        .json({ success: true, message: "User registered successfully" });
     } else {
       let error = new Error("User Registration Failed!");
 
@@ -159,7 +161,10 @@ authController.resetPassword = async (req, res, next) => {
     if (resObj !== null) {
       res
         .status(200)
-        .json({ success: true, message: `Password updated successfully for ${resObj.email}` });
+        .json({
+          success: true,
+          message: `Password updated successfully for ${resObj.email}`,
+        });
     } else {
       let error = new Error("Something went wrong! Try again...");
 
@@ -170,6 +175,36 @@ authController.resetPassword = async (req, res, next) => {
   } catch (error) {
     console.log("Auth Controller resetPassword() method Error: ", error);
 
+    next(error);
+  }
+};
+
+authController.changePassword = async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    if (!oldPassword || !newPassword) {
+      let error = new Error("All fields are required");
+      error.status = 400;
+      throw error;
+    }
+
+    Validator.validatePassword(newPassword);
+
+    const result = await authService.changePassword(
+      userId,
+      oldPassword,
+      newPassword
+    );
+
+    if (result.success) {
+      res
+        .status(200)
+        .json({ success: true, message: "Password changed successfully" });
+    }
+  } catch (error) {
+    console.log("Auth Controller changePassword() method Error: ", error);
     next(error);
   }
 };

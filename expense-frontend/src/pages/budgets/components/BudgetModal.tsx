@@ -1,19 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import { 
-  categoryStart, 
-  categoryFailure, 
-  categoryNamesSuccess 
-} from "../../../features/categories/categorySlice";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {
+  categoryStart,
+  categoryFailure,
+  categoryNamesSuccess,
+} from "../../../store/slices/category.slice";
 import AddCategoryModal from "../../expenses/components/AddCategoryModal";
 import api from "../../../services/axios";
 import { API_ENDPOINTS } from "../../../services/endpoints";
+
+import type { Budget } from "../../../types/models";
 
 interface BudgetModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  budget?: any;
+  budget?: Budget | null;
 }
 
 const frequencies = ["Monthly", "Weekly", "Yearly"];
@@ -24,10 +26,12 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   const [formData, setFormData] = useState({
-    categoryName: "",
-    budgetAmount: "",
-    frequency: "Monthly",
-    startDate: new Date().toISOString().split("T")[0],
+    categoryName: budget?.categoryName || "",
+    budgetAmount: budget?.budgetAmount?.toString() || "",
+    frequency: budget?.period?.frequency || "Monthly",
+    startDate:
+      budget?.period?.start?.split("T")[0] ||
+      new Date().toISOString().split("T")[0],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -37,34 +41,17 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
       const response = await api.get(API_ENDPOINTS.CATEGORIES.NAMES("expense"));
       dispatch(categoryNamesSuccess(response.data.data));
     } catch (error: any) {
-      dispatch(categoryFailure(error.response?.data?.message || "Failed to fetch categories"));
+      dispatch(
+        categoryFailure(
+          error.response?.data?.message || "Failed to fetch categories"
+        )
+      );
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (open) {
-      fetchCategoryNames();
-    }
-  }, [open, fetchCategoryNames]);
-
-  useEffect(() => {
-    if (budget) {
-      setFormData({
-        categoryName: budget.categoryName || "",
-        budgetAmount: budget.budgetAmount?.toString() || "",
-        frequency: budget.period?.frequency || "Monthly",
-        startDate: budget.period?.start?.split("T")[0] || new Date().toISOString().split("T")[0],
-      });
-    } else {
-      setFormData({
-        categoryName: "",
-        budgetAmount: "",
-        frequency: "Monthly",
-        startDate: new Date().toISOString().split("T")[0],
-      });
-    }
-    setErrors({});
-  }, [budget, open]);
+    fetchCategoryNames();
+  }, [fetchCategoryNames]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -76,9 +63,11 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    
+
     if (name === "categoryName" && value === "Others") {
       setShowAddCategory(true);
       return;
@@ -93,7 +82,7 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
   const handleCategoryAdded = (newCategoryName?: string) => {
     setShowAddCategory(false);
     if (newCategoryName) {
-      setFormData(prev => ({ ...prev, categoryName: newCategoryName }));
+      setFormData((prev) => ({ ...prev, categoryName: newCategoryName }));
     }
   };
 
@@ -116,7 +105,11 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
 
   return (
     <>
-      <div className="modal fade show d-block shadow-sm" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+      <div
+        className="modal fade show d-block shadow-sm"
+        tabIndex={-1}
+        style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1060 }}
+      >
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg rounded-4">
             <div className="modal-header border-bottom-0 px-4 pt-4">
@@ -134,9 +127,13 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
               <div className="modal-body px-4 py-3">
                 <div className="row g-3">
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Select Category</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Select Category
+                    </label>
                     <select
-                      className={`form-select rounded-3 ${errors.categoryName ? 'is-invalid' : ''}`}
+                      className={`form-select rounded-3 ${
+                        errors.categoryName ? "is-invalid" : ""
+                      }`}
                       name="categoryName"
                       value={formData.categoryName}
                       onChange={handleChange}
@@ -147,26 +144,42 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
                           {cat}
                         </option>
                       ))}
-                      <option value="Others" className="fw-bold text-primary">+ Add New Category</option>
+                      <option value="Others" className="fw-bold text-primary">
+                        + Add New Category
+                      </option>
                     </select>
-                    {errors.categoryName && <div className="invalid-feedback">{errors.categoryName}</div>}
+                    {errors.categoryName && (
+                      <div className="invalid-feedback">
+                        {errors.categoryName}
+                      </div>
+                    )}
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label small fw-bold text-muted mb-1">Budget Amount (₹)</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Budget Amount (₹)
+                    </label>
                     <input
                       type="number"
-                      className={`form-control rounded-3 ${errors.budgetAmount ? 'is-invalid' : ''}`}
+                      className={`form-control rounded-3 ${
+                        errors.budgetAmount ? "is-invalid" : ""
+                      }`}
                       name="budgetAmount"
                       value={formData.budgetAmount}
                       onChange={handleChange}
                       placeholder="Enter limit amount"
                     />
-                    {errors.budgetAmount && <div className="invalid-feedback">{errors.budgetAmount}</div>}
+                    {errors.budgetAmount && (
+                      <div className="invalid-feedback">
+                        {errors.budgetAmount}
+                      </div>
+                    )}
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Frequency</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Frequency
+                    </label>
                     <select
                       className="form-select rounded-3"
                       name="frequency"
@@ -182,7 +195,9 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label small fw-bold text-muted mb-1">Start Date</label>
+                    <label className="form-label small fw-bold text-muted mb-1">
+                      Start Date
+                    </label>
                     <input
                       type="date"
                       className="form-control rounded-3"
@@ -212,9 +227,9 @@ const BudgetModal = ({ open, onClose, onSubmit, budget }: BudgetModalProps) => {
           </div>
         </div>
       </div>
-      <AddCategoryModal 
-        show={showAddCategory} 
-        onClose={handleCategoryAdded} 
+      <AddCategoryModal
+        show={showAddCategory}
+        onClose={handleCategoryAdded}
         type="expense"
       />
     </>

@@ -25,7 +25,10 @@ const getCategoryColor = (category: string): string => {
 };
 
 const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
-  const percentage = Math.min((budget.amountSpent / budget.budgetAmount) * 100, 100);
+  const percentage = Math.min(
+    (budget.amountSpent / budget.budgetAmount) * 100,
+    100
+  );
   const isExceeded = budget.amountSpent > budget.budgetAmount;
   const isWarning = percentage >= 80 && !isExceeded;
 
@@ -46,7 +49,9 @@ const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
   return (
     <div
       className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden"
-      style={{ borderTop: `4px solid ${getCategoryColor(budget.categoryName)}` }}
+      style={{
+        borderTop: `4px solid ${getCategoryColor(budget.categoryName)}`,
+      }}
     >
       <div className="card-body p-4">
         <div className="d-flex justify-content-between align-items-start mb-3">
@@ -78,10 +83,14 @@ const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
           <div className="d-flex justify-content-between mb-2">
             <span className="small text-muted">Usage</span>
             <span className={`small fw-bold ${getProgressTextColorClass()}`}>
-              ₹{budget.amountSpent.toLocaleString()} / ₹{budget.budgetAmount.toLocaleString()}
+              ₹{budget.amountSpent.toLocaleString()} / ₹
+              {budget.budgetAmount.toLocaleString()}
             </span>
           </div>
-          <div className="progress rounded-pill shadow-none bg-light" style={{ height: '8px' }}>
+          <div
+            className="progress rounded-pill shadow-none bg-light"
+            style={{ height: "8px" }}
+          >
             <div
               className={`progress-bar rounded-pill ${getProgressColorClass()}`}
               role="progressbar"
@@ -112,9 +121,21 @@ const BudgetCard = ({ budget, onEdit, onDelete }: BudgetCardProps) => {
 
         {(isExceeded || isWarning) && (
           <div className="mt-3">
-            <span className={`badge ${isExceeded ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning-emphasis'} border-0 rounded-pill fw-bold extra-small py-1 px-3 w-100`}>
-              <i className={`bi ${isExceeded ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill'} me-1`}></i>
-              {isExceeded ? 'Budget Exceeded!' : 'Nearly Exhausted'}
+            <span
+              className={`badge ${
+                isExceeded
+                  ? "bg-danger-subtle text-danger"
+                  : "bg-warning-subtle text-warning-emphasis"
+              } border-0 rounded-pill fw-bold extra-small py-1 px-3 w-100`}
+            >
+              <i
+                className={`bi ${
+                  isExceeded
+                    ? "bi-exclamation-triangle-fill"
+                    : "bi-info-circle-fill"
+                } me-1`}
+              ></i>
+              {isExceeded ? "Budget Exceeded!" : "Nearly Exhausted"}
             </span>
           </div>
         )}

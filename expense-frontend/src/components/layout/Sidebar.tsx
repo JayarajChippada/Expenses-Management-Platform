@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
-import { closeSidebar } from "../../features/ui/uiSlice";
-import { logOut } from "../../features/auth/authSlice";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { closeSidebar } from "../../store/slices/ui.slice";
+import { logOut } from "../../store/slices/auth.slice";
 
 interface SidebarProps {
   isMobile: boolean;
@@ -14,11 +14,21 @@ const navItems = [
   { label: "Budgets", path: "/budgets", icon: "bi-graph-up-arrow" },
   { label: "Goals", path: "/goals", icon: "bi-flag" },
   { label: "Reports", path: "/reports", icon: "bi-bar-chart-line" },
-  { label: "Settings", path: "/settings", icon: "bi-gear" },
+  { label: "Categories", path: "/categories", icon: "bi-tag" },
+  { label: "Profile", path: "/settings", icon: "bi-person-circle" },
 ];
 
-const Sidebar = ({ isMobile }: SidebarProps) => {
-  const { sidebarOpen } = useAppSelector((state) => state.ui);
+const getInitials = (name: string | undefined) => {
+  if (!name) return "U";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+const SidebarContent = ({ onNavClick }: { onNavClick: () => void }) => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -28,22 +38,14 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
     navigate("/login");
   };
 
-  const handleNavClick = () => {
-    if (isMobile) {
-      dispatch(closeSidebar());
-    }
-  };
-
-  const getInitials = (name: string | undefined) => {
-    if (!name) return "U";
-    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-  };
-
-  const SidebarContent = () => (
+  return (
     <div className="d-flex flex-column h-100">
       <div className="p-4 mb-2">
         <div className="d-flex align-items-center gap-3">
-          <div className="rounded-3 bg-primary-custom d-flex align-items-center justify-content-center p-2 shadow-sm" style={{ width: '40px', height: '40px' }}>
+          <div
+            className="rounded-3 bg-primary-custom d-flex align-items-center justify-content-center p-2 shadow-sm"
+            style={{ width: "40px", height: "40px" }}
+          >
             <i className="bi bi-person-workspace text-primary-custom fs-4"></i>
           </div>
           <span className="fw-bold h5 mb-0 text-dark">ExpenseTracker</span>
@@ -55,9 +57,11 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
           <NavLink
             key={item.path}
             to={item.path}
-            onClick={handleNavClick}
+            onClick={onNavClick}
             className={({ isActive }) =>
-              `nav-link d-flex align-items-center gap-3 py-2 px-3 fw-medium transition-all ${isActive ? 'active' : 'text-muted'}`
+              `nav-link d-flex align-items-center gap-3 py-2 px-3 fw-medium transition-all ${
+                isActive ? "active" : "text-muted"
+              }`
             }
           >
             <i className={`bi ${item.icon} fs-5`}></i>
@@ -78,12 +82,12 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
               width: 40,
               height: 40,
               fontSize: 14,
-              lineHeight: "1"
+              lineHeight: "1",
             }}
           >
             {getInitials(user?.fullName)}
           </div>
-          
+
           <div className="flex-grow-1 overflow-hidden">
             <div className="fw-bold text-dark text-truncate small">
               {user?.fullName || "Jayaraj Chippada"}
@@ -92,7 +96,7 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
               {user?.email || "jayaraj@example.com"}
             </div>
           </div>
-          
+
           <button
             className="btn btn-sm text-danger p-0 border-0"
             onClick={handleLogout}
@@ -102,25 +106,46 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
           </button>
         </div>
       </div>
-
     </div>
   );
+};
+
+const Sidebar = ({ isMobile }: SidebarProps) => {
+  const { sidebarOpen } = useAppSelector((state) => state.ui);
+  const dispatch = useAppDispatch();
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      dispatch(closeSidebar());
+    }
+  };
 
   if (isMobile) {
     return (
       <>
         {sidebarOpen && (
-          <div className="offcanvas-backdrop fade show" onClick={() => dispatch(closeSidebar())}></div>
+          <div
+            className="offcanvas-backdrop fade show"
+            onClick={() => dispatch(closeSidebar())}
+          ></div>
         )}
         <div
-          className={`offcanvas offcanvas-start ${sidebarOpen ? 'show' : ''}`}
-          style={{ visibility: sidebarOpen ? 'visible' : 'hidden', width: '280px', borderRight: 'none' }}
+          className={`offcanvas offcanvas-start ${sidebarOpen ? "show" : ""}`}
+          style={{
+            visibility: sidebarOpen ? "visible" : "hidden",
+            width: "280px",
+            borderRight: "none",
+          }}
         >
           <div className="offcanvas-header justify-content-end p-2">
-            <button type="button" className="btn-close" onClick={() => dispatch(closeSidebar())}></button>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={() => dispatch(closeSidebar())}
+            ></button>
           </div>
           <div className="offcanvas-body p-0">
-            <SidebarContent />
+            <SidebarContent onNavClick={handleNavClick} />
           </div>
         </div>
       </>
@@ -129,7 +154,7 @@ const Sidebar = ({ isMobile }: SidebarProps) => {
 
   return (
     <div className="sidebar d-flex flex-column position-fixed h-100 border-end border-light">
-      <SidebarContent />
+      <SidebarContent onNavClick={handleNavClick} />
     </div>
   );
 };

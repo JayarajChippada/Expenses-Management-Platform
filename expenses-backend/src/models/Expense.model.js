@@ -29,7 +29,7 @@ const expenseSchema = Schema(
     merchant: {
       type: String,
 
-      maxLength: 20, 
+      maxLength: 20,
 
       default: "Unknown",
     },
@@ -41,15 +41,6 @@ const expenseSchema = Schema(
 
       required: true,
     },
-
-    source: {
-      type: String,
-
-      enum: ["MANUAL", "BANK", "SMS", "STATEMENT"],
-
-      default: "MANUAL",
-    },
-
     date: {
       type: Date,
 
@@ -66,8 +57,7 @@ const expenseSchema = Schema(
       default: "",
     },
   },
-  { timestamps: true },
-  { collection: "Expenses" }
+  { timestamps: true, collection: "Expenses" }
 );
 
 const expenseModel = mongoose.model("Expenses", expenseSchema);

@@ -107,7 +107,7 @@ authService.forgotPassword = async (email) => {
       error.status = 400;
 
       throw error;
-    }
+    } 
 
     const resetToken = await user.createResetToken();
 
@@ -211,6 +211,36 @@ authService.resetPassword = async (email, password, resetToken) => {
   } catch (error) {
     console.log("Auth Service resetPassword() method Error: ", error);
 
+    throw error;
+  }
+};
+
+authService.changePassword = async (userId, oldPassword, newPassword) => {
+  try {
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      let error = new Error("User not found");
+      error.status = 404;
+      throw error;
+    }
+
+    const isMatch = await bcryptjs.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      let error = new Error("Invalid old password");
+      error.status = 400;
+      throw error;
+    }
+
+    const salt = await bcryptjs.genSalt(10);
+    user.password = await bcryptjs.hash(newPassword, salt);
+
+    await user.save();
+
+    return { success: true };
+  } catch (error) {
+    console.log("Auth Service changePassword() method Error: ", error);
     throw error;
   }
 };
