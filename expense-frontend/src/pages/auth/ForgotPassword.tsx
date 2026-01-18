@@ -1,45 +1,50 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import api from "../../services/axios"
-import { API_ENDPOINTS } from "../../services/endpoints"
-import { validateEmail } from "../../utils/validation"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../services/axios";
+import { API_ENDPOINTS } from "../../services/endpoints";
+import { validateEmail } from "../../utils/validation";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   // success state removed as we navigate away
-  const [validationError, setValidationError] = useState("")
-  
-  const navigate = useNavigate()
+  const [validationError, setValidationError] = useState("");
+
+  const navigate = useNavigate();
 
   const validateEmailField = () => {
-    const error = validateEmail(email)
+    const error = validateEmail(email);
     if (error) {
-      setValidationError(error)
-      return false
+      setValidationError(error);
+      return false;
     }
-    setValidationError("")
-    return true
-  }
+    setValidationError("");
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateEmailField()) return
+    e.preventDefault();
+    if (!validateEmailField()) return;
 
-    setLoading(true)
-    setError("")
+    setLoading(true);
+    setError("");
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email })
+      const response = await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, {
+        email,
+      });
       // The backend returns { success: true, message: resetUrl }
-      const resetUrl = response.data.message
-      navigate("/reset-password", { state: { email, resetUrl } })
+      const resetUrl = response.data.message;
+      navigate("/reset-password", { state: { email, resetUrl } });
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send reset link. Please try again.")
+      setError(
+        err.response?.data?.message ||
+          "Failed to send reset link. Please try again."
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="auth-bg d-flex align-items-center justify-content-center py-5">
@@ -50,13 +55,21 @@ const ForgotPassword = () => {
               <div className="card-body p-4 p-md-5">
                 {/* Logo */}
                 <div className="text-center mb-4">
-                  <i className="bi bi-wallet2 text-primary-custom" style={{ fontSize: '48px' }}></i>
-                  <h4 className="mt-2 fw-bold text-primary-custom">ExpenseManager</h4>
+                  <img
+                    src="/assets/logo.png"
+                    alt="Logo"
+                    style={{ width: "80px", height: "80px" }}
+                    className="mb-2"
+                  />
+                  <h4 className="mt-2 fw-bold text-primary-custom">
+                    Expense Manager
+                  </h4>
                 </div>
 
                 <h5 className="text-center fw-bold mb-1">Forgot Password?</h5>
                 <p className="text-center text-muted mb-4">
-                  Enter your email address and we'll send you instructions to reset your password
+                  Enter your email address and we'll send you instructions to
+                  reset your password
                 </p>
 
                 {error && (
@@ -67,15 +80,19 @@ const ForgotPassword = () => {
 
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email Address</label>
+                    <label htmlFor="email" className="form-label">
+                      Email Address
+                    </label>
                     <input
                       type="email"
-                      className={`form-control ${validationError ? 'is-invalid' : ''}`}
+                      className={`form-control ${
+                        validationError ? "is-invalid" : ""
+                      }`}
                       id="email"
                       value={email}
                       onChange={(e) => {
-                        setEmail(e.target.value)
-                        setValidationError("")
+                        setEmail(e.target.value);
+                        setValidationError("");
                       }}
                       placeholder="Enter your email"
                       autoComplete="email"
@@ -91,7 +108,10 @@ const ForgotPassword = () => {
                     disabled={loading}
                   >
                     {loading ? (
-                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      ></span>
                     ) : null}
                     Send Reset Link
                   </button>
@@ -109,7 +129,7 @@ const ForgotPassword = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

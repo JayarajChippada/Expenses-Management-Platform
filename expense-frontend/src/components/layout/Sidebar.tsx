@@ -42,13 +42,14 @@ const SidebarContent = ({ onNavClick }: { onNavClick: () => void }) => {
     <div className="d-flex flex-column h-100">
       <div className="p-4 mb-2">
         <div className="d-flex align-items-center gap-3">
-          <div
-            className="rounded-3 bg-primary-custom d-flex align-items-center justify-content-center p-2 shadow-sm"
-            style={{ width: "40px", height: "40px" }}
-          >
-            <i className="bi bi-person-workspace text-primary-custom fs-4"></i>
+          <div className="flex-shrink-0">
+            <img
+              src="/assets/logo.png"
+              alt="Logo"
+              style={{ width: "40px", height: "40px" }}
+            />
           </div>
-          <span className="fw-bold h5 mb-0 text-dark">ExpenseTracker</span>
+          <span className="fw-bold h5 mb-0 text-dark">Expense Manager</span>
         </div>
       </div>
 

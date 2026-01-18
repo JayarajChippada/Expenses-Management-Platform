@@ -1,13 +1,13 @@
 const fs = require("fs");
 
 const errorLogger = (err, req, res, next) => {
-  const errMsg = err.stack + "\n";
+  // const errMsg = err.stack + "\n";
 
-  fs.appendFile("ErrorLogger.txt", errMsg, (error) => {
-    if (error) {
-      console.log("Appending error message failed");
-    }
-  });
+  // fs.appendFile("ErrorLogger.txt", errMsg, (error) => {
+  //   if (error) {
+  //     console.log("Appending error message failed");
+  //   }
+  // });
 
   const statusCode = err.status || 500;
 

@@ -119,7 +119,7 @@ const Dashboard = () => {
       <div className="mb-4">
         <h4 className="fw-bold text-dark mb-1">Dashboard</h4>
         <p className="text-muted small">
-          Welcome back, {user?.fullName?.split(" ")[0] || "User"}! Here's your
+          Welcome back, {user?.fullName?.split(" ")?.[0] || "User"}! Here's your
           financial overview.
         </p>
       </div>

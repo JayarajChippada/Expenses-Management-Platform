@@ -25,7 +25,7 @@ const App = (app) => {
   );
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use(requestLogger); 
+  // app.use(requestLogger); 
   app.use("/api/v1/auth", AuthRouter);
   app.use("/api/v1/users", UserRouter);
   app.use("/api/v1/expenses", ExpenseRouter);

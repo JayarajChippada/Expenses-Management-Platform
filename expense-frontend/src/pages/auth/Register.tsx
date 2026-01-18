@@ -126,12 +126,14 @@ const Register = () => {
               <div className="card-body p-4 p-md-5">
                 {/* Logo */}
                 <div className="text-center mb-4">
-                  <i
-                    className="bi bi-wallet2 text-primary-custom"
-                    style={{ fontSize: "48px" }}
-                  ></i>
+                  <img
+                    src="/assets/logo.png"
+                    alt="Logo"
+                    style={{ width: "80px", height: "80px" }}
+                    className="mb-2"
+                  />
                   <h4 className="mt-2 fw-bold text-primary-custom">
-                    ExpenseManager
+                    Expense Manager
                   </h4>
                 </div>
 
