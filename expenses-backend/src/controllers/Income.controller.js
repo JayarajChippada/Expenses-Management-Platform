@@ -20,6 +20,7 @@ incomeController.addIncome = async (req, res, next) => {
       error.status = 400;
       throw error;
     }
+    await Validator.validateCategory(userId, categoryName, "income");
 
     const incomeObj = new Income({ userId: userId, ...req.body });
     const resObj = await incomeService.addIncome(incomeObj);
@@ -77,6 +78,9 @@ incomeController.updateIncome = async (req, res, next) => {
       let error = new Error("Future Date now allowed");
       error.status = 400;
       throw error;
+    }
+    if (req.body.categoryName) {
+      await Validator.validateCategory(userId, req.body.categoryName, "income");
     }
     const incomeObj = { ...req.body, userId };
     const resObj = await incomeService.updateIncome(incomeId, incomeObj);

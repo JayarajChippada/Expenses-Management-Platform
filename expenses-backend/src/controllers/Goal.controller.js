@@ -1,6 +1,7 @@
 const goalService = require("../services/Goal.service");
 
 const Goal = require("../models/classes/Goal");
+const Validator = require("../utilities/validator");
 
 let goalController = {};
 
@@ -39,18 +40,18 @@ goalController.addGoal = async (req, res, next) => {
       throw error;
     }
 
+    await Validator.validateCategory(userId, categoryName, "goal");
+
     const goalObj = new Goal({ userId: userId, ...req.body });
 
     const resObj = await goalService.addGoal(goalObj);
 
     if (resObj !== null) {
-      res
-        .status(201)
-        .json({
-          success: true,
-          message: "Financial Goal set Successfully",
-          data: resObj,
-        });
+      res.status(201).json({
+        success: true,
+        message: "Financial Goal set Successfully",
+        data: resObj,
+      });
     } else {
       let error = new Error("Adding Goal failed!");
 
@@ -70,6 +71,10 @@ goalController.updateGoal = async (req, res, next) => {
     const userId = req.user.userId;
 
     const goalId = req.params.goalId;
+
+    if (req.body.categoryName) {
+      await Validator.validateCategory(userId, req.body.categoryName, "goal");
+    }
 
     const goalObj = new Goal({ userId: userId, ...req.body });
 
@@ -131,13 +136,11 @@ goalController.addFunds = async (req, res, next) => {
     const resObj = await goalService.addFunds(userId, goalId, fundAmount);
 
     if (resObj !== null) {
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Funds added successfully",
-          data: resObj,
-        });
+      res.status(200).json({
+        success: true,
+        message: "Funds added successfully",
+        data: resObj,
+      });
     } else {
       let error = new Error("Fund Updation Failed!");
 

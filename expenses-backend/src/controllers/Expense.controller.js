@@ -223,7 +223,11 @@ expenseController.updateExpense = async (req, res, next) => {
     // Implement validations here
 
     if (req.body.categoryName)
-      await Validator.validateCategory(userId, req.body.categoryName);
+      await Validator.validateCategory(
+        userId,
+        req.body.categoryName,
+        "expense"
+      );
 
     if (req.body.date) {
       if (new Date(req.body.date) > Date.now()) {
