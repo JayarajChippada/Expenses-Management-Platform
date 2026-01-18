@@ -44,13 +44,13 @@ const Landing = () => {
             <div className="d-flex flex-column flex-lg-row gap-2 gap-lg-3 ms-auto mt-3 mt-lg-0 align-items-center">
               <Link
                 to="/login"
-                className="btn btn-link text-dark text-decoration-none fw-bold small px-4 w-100 w-lg-auto"
+                className="btn btn-link text-dark text-decoration-none fw-bold small px-4"
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="btn btn-primary-gradient px-4 py-2 rounded-pill shadow-sm fw-bold border-0 w-100 w-lg-auto text-center"
+                className="btn btn-primary-gradient px-4 py-2 rounded-pill shadow-sm fw-bold border-0 text-center"
               >
                 Get Started
               </Link>
